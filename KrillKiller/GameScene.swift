@@ -14,7 +14,11 @@ class GameScene: SKScene {
     var mManager = CMMotionManager()
     var whale = SKSpriteNode(imageNamed: "newWhale")
     var currentYDirection : Double = 0.0
-    var previousYDirection : Double!
+    var currentDepth = 100.0
+    var depthLabel = SKLabelNode()
+    var spawnManager : SpawnManager!
+    var skAction = SKAction()
+    
     
     override func didMoveToView(view: SKView) {
         
@@ -25,7 +29,7 @@ class GameScene: SKScene {
             //crash it:
             assert(1 == 2)
         }
-        
+        self.spawnKrill()
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
         self.addChild(self.whale)
@@ -39,6 +43,19 @@ class GameScene: SKScene {
         self.addChild(self.depthLabel)
  
         self.setupMotionDetection()
+    }
+    
+    func spawnKrill() {
+        self.spawnManager = SpawnManager()
+        var krill = SKSpriteNode(imageNamed: "krill")
+        krill.position = self.spawnManager.randomSpawnPoint()
+        //        krill.position = CGPointMake(300, 200)
+        var endPt = self.spawnManager.randomEndPoint()
+        var moveAction = SKAction.moveTo(endPt, duration: 10)
+        krill.runAction(moveAction)
+        self.addChild(krill)
+        println("startpt: \(krill.position)")
+        println("endpt: \(endPt)")
     }
     
     func setupMotionDetection() {
@@ -121,7 +138,5 @@ class GameScene: SKScene {
         self.currentDepth = self.currentDepth + deltaDepth
         self.depthLabel.text = "\(self.currentDepth)"
         
-        //at end of all, set this to previousYDirection:
-        self.previousYDirection = self.currentYDirection
     }
 }
