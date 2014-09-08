@@ -411,6 +411,7 @@
 				A2BF1E2C19BE0E7F00BAD4C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A2BF1E2D19BE0E7F00BAD4C0 /* Build configuration list for PBXNativeTarget "KrillKillerTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +420,7 @@
 				A2BF1E2F19BE0E7F00BAD4C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
