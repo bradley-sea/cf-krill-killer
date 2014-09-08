@@ -17,10 +17,17 @@ class GameScene: SKScene {
     var walePointingDown = false
     var walePointingUp = false
     var currentYDirection : Double = 0.0
+    var previousYDirection : Double!
     
     override func didMoveToView(view: SKView) {
         
-        self.scene.size = self.view.bounds.size
+        if let theSize = self.view?.bounds.size {
+            self.scene?.size = theSize
+        }
+        else {
+            //crash it:
+            assert(1 == 2)
+        }
         
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
@@ -78,7 +85,7 @@ class GameScene: SKScene {
         
         if self.currentYDirection > 0.35 {
             
-            println("going down!")
+            println("going down! by \(self.currentYDirection)")
             
             //make color darker
             var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
@@ -87,16 +94,32 @@ class GameScene: SKScene {
             self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
             self.krill.position = CGPoint(x: self.krill.position.x,y: self.krill.position.y + 0.5)
             if !self.walePointingDown {
+                self.previousYDirection = nil
                 self.walePointingDown = true
                 var radian : CGFloat = CGFloat(M_PI * -25.0 / 180.0)
+                var degree = radian * 180.0 / CGFloat(M_PI)
                 let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
+                println("radian: \(radian), degree: \(degree)")
                 self.whale.runAction(rotate)
             }
+            else {
+                var radian : CGFloat = CGFloat(M_PI * -(self.currentYDirection) / 180.0)
+                var degree = radian * 180.0 / CGFloat(M_PI)
+                let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
+//                println("radian: \(radian), degree: \(degree)")
+                var degreeOfRotation = (Double(self.whale.zRotation) * 180.0 / M_PI)
+                println("zRotation: \(degreeOfRotation) degrees")
+                if degreeOfRotation > -45.0 {
+                    self.whale.runAction(rotate)
+                }
+            }
             
-        } else if self.currentYDirection < 0.35 && self.currentYDirection > 0 {
+        } else if self.currentYDirection < 0.35 && self.currentYDirection > -0.35 {
+            
             
             //make color lighter
-            
+            var degreeOfRotation = (Double(self.whale.zRotation) * 180.0 / M_PI)
+            println("zRotation: \(degreeOfRotation) degrees")
             if self.walePointingDown {
                 self.walePointingDown = false
                 var radian : CGFloat = CGFloat(M_PI * 25 / 180.0)
@@ -112,23 +135,37 @@ class GameScene: SKScene {
             }
             
         } else if self.currentYDirection < -0.35 {
-            println("going down")
-            //make color darker
+            println("going up by \(self.currentYDirection)")
+            //make color lighter
             var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
             alpha = alpha + 0.002
             //set background to blue
             self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
             self.krill.position = CGPoint(x: self.krill.position.x,y: self.krill.position.y - 0.5)
             if !self.walePointingUp {
+                self.previousYDirection = nil
                 self.walePointingUp = true
-                var radian : CGFloat = CGFloat(M_PI * 45.0 / 180.0)
+                var radian : CGFloat = CGFloat(M_PI * 25.0 / 180.0)
+                var degree = radian * 180.0 / CGFloat(M_PI)
                 let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
+                println("radian: \(radian), degree: \(degree)")
                 self.whale.runAction(rotate)
+            }
+            else {
+                var radian : CGFloat = CGFloat(M_PI * -(self.currentYDirection) / 180.0)
+                var degree = radian * 180.0 / CGFloat(M_PI)
+                let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
+//                println("radian: \(radian), degree: \(degree)")
+                var degreeOfRotation = (Double(self.whale.zRotation) * 180.0 / M_PI)
+                println("zRotation: \(degreeOfRotation) degrees")
+                if degreeOfRotation < 45.0 {
+                    self.whale.runAction(rotate)
+                }
             }
             
         }
         
-        
-        
+        //at end of all, set this to previousYDirection:
+        self.previousYDirection = self.currentYDirection
     }
 }
