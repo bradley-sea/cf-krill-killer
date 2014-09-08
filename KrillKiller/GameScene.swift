@@ -16,11 +16,23 @@ class GameScene: SKScene {
     var currentYDirection : Double = 0.0
     var currentDepth = 100.0
     var depthLabel = SKLabelNode()
+    var spawnManager : SpawnManager!
+    var skAction = SKAction()
+    var deltaTime = 0.0
+    var timeSinceLastFood = 0.0
+    var nextFoodTime = 0.0
+    var previousTime = 0.0
+    var foodYDelta = 0.0
+    
     override func didMoveToView(view: SKView) {
         
-        //fix the scene size
-        self.size = self.view.bounds.size
-        
+        if let theSize = self.view?.bounds.size {
+            self.scene?.size = theSize
+        }
+        else {
+            //crash it:
+            assert(1 == 2)
+        }
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
         self.addChild(self.whale)
@@ -34,6 +46,27 @@ class GameScene: SKScene {
         self.addChild(self.depthLabel)
  
         self.setupMotionDetection()
+    }
+    
+    func spawnKrill() {
+        self.spawnManager = SpawnManager()
+        var krill = SKSpriteNode(imageNamed: "krill")
+        krill.name = "food"
+        krill.position = self.spawnManager.randomSpawnPoint()
+        //        krill.position = CGPointMake(300, 200)
+        var endPt = self.spawnManager.randomEndPoint()
+//        var duration = (arc4random() % 10) + 5
+//        var moveAction = SKAction.moveTo(endPt, duration: NSTimeInterval(duration))
+        var moveAction = SKAction.moveTo(endPt, duration: 10)
+        var removeAction = SKAction.runBlock { () -> Void in
+            krill.removeFromParent()
+        }
+        //ensures krill removed from taking up memory:
+        var actions = SKAction.sequence([moveAction,removeAction])
+        krill.runAction(actions)
+        self.addChild(krill)
+        println("startpt: \(krill.position)")
+        println("endpt: \(endPt)")
     }
     
     func setupMotionDetection() {
@@ -57,6 +90,21 @@ class GameScene: SKScene {
     }
     
     override func update(currentTime: CFTimeInterval) {
+        self.deltaTime = currentTime - self.previousTime
+        self.previousTime = currentTime
+        self.timeSinceLastFood += self.deltaTime
+        if self.timeSinceLastFood > self.nextFoodTime {
+            //spawn some food:
+            self.spawnKrill()
+            //generate random nextFood time:
+            println("previous food time: \(self.nextFoodTime)")
+            self.nextFoodTime = Double(arc4random() % 2000) / 1000
+            println("new food time: \(self.nextFoodTime)")
+            self.timeSinceLastFood = 0
+            print()
+        }
+        
+        
         /* Called before each frame is rendered */
    
         // sample of changing the background color as we go deeper
@@ -70,6 +118,15 @@ class GameScene: SKScene {
         self.whale.zRotation = newRadian
         self.updateDepth(newValue)
         
+        //get whale's angle.
+        //for eachObject:
+        //move its currentposition (y-coordinate) oppositely.
+        self.enumerateChildNodesWithName("food", usingBlock: { (child, stop) -> Void in
+            //check what angle
+            var getAngle = self.whale.zRotation
+            var curPos = child.position
+            child.position = CGPointMake(child.position.x, child.position.y + 10)
+        })
     }
     
     //method used to take a our current motion value and translate it to degrees between -45 and 45
@@ -91,27 +148,29 @@ class GameScene: SKScene {
         
         if newValue > 30 {
             deltaDepth = -1
-            println("going super high (above 30)")
+                self.foodYDelta = -1
         } else if newValue > 15 && newValue < 30 {
             deltaDepth = -0.5
-            println("going high (above 15 and below 30")
+                self.foodYDelta = -0.5
         } else if newValue > 5 && newValue < 15 {
             deltaDepth = -0.25
-            println("going sorta high (above 0 and below 15")
+                self.foodYDelta = -0.25
+
         } else if newValue > -5 && newValue < 5 {
             deltaDepth = 0
-            println("chilling between 5 and -5")
+                self.foodYDelta = 0.0
         } else if newValue > -15 && newValue < -5 {
-            println("going sorta low (above -15 and below 0")
             deltaDepth = 0.25
+                self.foodYDelta = 0.25
         } else if newValue > -30 && newValue < -15 {
-            println("going low (above -30 and below -15")
             deltaDepth = 0.5
+                self.foodYDelta = 0.5
         } else if newValue < -30 {
-            println("going super low (below -30)")
             deltaDepth = 1.0
+                self.foodYDelta = 1.0
         } else {
             deltaDepth = 0
+                self.foodYDelta = 0.0
         }
         self.currentDepth = self.currentDepth + deltaDepth
         self.depthLabel.text = "\(self.currentDepth)"
