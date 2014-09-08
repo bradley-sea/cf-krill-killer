@@ -12,35 +12,21 @@ import CoreMotion
 class GameScene: SKScene {
     
     var mManager = CMMotionManager()
-    var krill = SKSpriteNode(imageNamed: "krill")
-    var whale = SKSpriteNode(imageNamed: "KillerWhale")
-    var walePointingDown = false
-    var walePointingUp = false
+    var whale = SKSpriteNode(imageNamed: "newWhale")
     var currentYDirection : Double = 0.0
     
     override func didMoveToView(view: SKView) {
         
-        self.scene.size = self.view.bounds.size
+        //fix the scene size
+        self.size = self.view.bounds.size
         
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
         self.addChild(self.whale)
         
-        //add krill
-        self.krill.position = CGPoint(x: self.size.width + -50, y: 150)
-        
-        self.addChild(self.krill)
-        
-        var mover = SKAction.moveToX(-100, duration: 10.0)
-        self.krill.runAction(mover)
-        
-        
         //set background to blue
-        self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.6)
-        
-        var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
-        println(alpha)
-        
+        self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.3)
+ 
         self.setupMotionDetection()
     }
     
@@ -49,10 +35,9 @@ class GameScene: SKScene {
         self.mManager.accelerometerUpdateInterval = 0.05
         self.mManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue()) { (accelerometerData : CMAccelerometerData!, error) in
             
+            //keeping track of the devices orientation in relation to our gameplay. we will use this property in our update loop to figure out which way the wale should be pointing
+            
             self.currentYDirection = accelerometerData.acceleration.y
-            
-            println(accelerometerData.acceleration.y)
-            
         }
     }
     
@@ -68,67 +53,37 @@ class GameScene: SKScene {
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+   
+        
+        // sample of changing the background color as we go deeper
+        //var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
+        //            alpha = alpha + 0.002
+        //            //set background to blue
+        //            self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
+
+        
+        var newValue = self.translate(self.currentYDirection)
+        //println(newValue)
+        var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
+        
+        //var y = 1 + (self.currentYDirection - 45) * (.8-1)/ (-45-45)
         
         
+      self.whale.zRotation = newRadian
         
+        println(self.whale.zRotation)
+    }
+    
+    //method used to take a our current motion value and translate it to degrees between -45 and 45
+    func translate(value : Double) -> Double {
         
+        var leftSpan = -0.7 - (0.7) //1.4
+        var rightSpan = 45.0 - (-45.0) // 90
         
-        //test to see if we can smoothly move the krill even while an action is being run on them
-        //self.krill.position = CGPoint(x: self.krill.position.x,y: self.krill.position.y + 0.5)
-        
-        if self.currentYDirection > 0.35 {
-            
-            println("going down!")
-            
-            //make color darker
-            var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
-            alpha = alpha - 0.002
-            //set background to blue
-            self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
-            self.krill.position = CGPoint(x: self.krill.position.x,y: self.krill.position.y + 0.5)
-            if !self.walePointingDown {
-                self.walePointingDown = true
-                var radian : CGFloat = CGFloat(M_PI * -25.0 / 180.0)
-                let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
-                self.whale.runAction(rotate)
-            }
-            
-        } else if self.currentYDirection < 0.35 && self.currentYDirection > 0 {
-            
-            //make color lighter
-            
-            if self.walePointingDown {
-                self.walePointingDown = false
-                var radian : CGFloat = CGFloat(M_PI * 25 / 180.0)
-                let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
-                self.whale.runAction(rotate)
-            }
-            
-            if self.walePointingUp {
-                self.walePointingUp = false
-                var radian : CGFloat = CGFloat(M_PI * -25 / 180.0)
-                let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
-                self.whale.runAction(rotate)
-            }
-            
-        } else if self.currentYDirection < -0.35 {
-            println("going down")
-            //make color darker
-            var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
-            alpha = alpha + 0.002
-            //set background to blue
-            self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
-            self.krill.position = CGPoint(x: self.krill.position.x,y: self.krill.position.y - 0.5)
-            if !self.walePointingUp {
-                self.walePointingUp = true
-                var radian : CGFloat = CGFloat(M_PI * 45.0 / 180.0)
-                let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
-                self.whale.runAction(rotate)
-            }
-            
-        }
-        
-        
+        //convert left range into a 0-1 range 
+        var valueScale = (value - 0.7) / leftSpan
+    
+        return -45 + (valueScale * rightSpan)
         
     }
 }

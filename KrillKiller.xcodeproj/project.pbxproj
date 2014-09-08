@@ -16,6 +16,7 @@
 		A2BF1E2719BE0E7F00BAD4C0 /* KrillKillerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E2619BE0E7F00BAD4C0 /* KrillKillerTests.swift */; };
 		A2BF1E3219BE0E9100BAD4C0 /* KillerWhale.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */; };
 		A2BF1E3319BE0E9100BAD4C0 /* krill.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3119BE0E9100BAD4C0 /* krill.png */; };
+		A2BF1E3719BE271300BAD4C0 /* newWhale.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3619BE271300BAD4C0 /* newWhale.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		A2BF1E2619BE0E7F00BAD4C0 /* KrillKillerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrillKillerTests.swift; sourceTree = "<group>"; };
 		A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = KillerWhale.png; sourceTree = "<group>"; };
 		A2BF1E3119BE0E9100BAD4C0 /* krill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = krill.png; sourceTree = "<group>"; };
+		A2BF1E3619BE271300BAD4C0 /* newWhale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newWhale.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 				A2BF1E1319BE0E7F00BAD4C0 /* GameScene.swift */,
 				A2BF1E1519BE0E7F00BAD4C0 /* GameViewController.swift */,
 				A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */,
+				A2BF1E3619BE271300BAD4C0 /* newWhale.png */,
 				A2BF1E3119BE0E9100BAD4C0 /* krill.png */,
 				A2BF1E1719BE0E7F00BAD4C0 /* Main.storyboard */,
 				A2BF1E1A19BE0E7F00BAD4C0 /* Images.xcassets */,
@@ -201,6 +204,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2BF1E3719BE271300BAD4C0 /* newWhale.png in Resources */,
 				A2BF1E1B19BE0E7F00BAD4C0 /* Images.xcassets in Resources */,
 				A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */,
 				A2BF1E3219BE0E9100BAD4C0 /* KillerWhale.png in Resources */,
