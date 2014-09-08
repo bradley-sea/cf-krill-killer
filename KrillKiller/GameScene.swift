@@ -14,8 +14,8 @@ class GameScene: SKScene {
     var mManager = CMMotionManager()
     var krill = SKSpriteNode(imageNamed: "krill")
     var whale = SKSpriteNode(imageNamed: "KillerWhale")
-    var walePointingDown = false
-    var walePointingUp = false
+    var whalePointingDown = false
+    var whalePointingUp = false
     var currentYDirection : Double = 0.0
     
     override func didMoveToView(view: SKView) {
@@ -86,8 +86,8 @@ class GameScene: SKScene {
             //set background to blue
             self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
             self.krill.position = CGPoint(x: self.krill.position.x,y: self.krill.position.y + 0.5)
-            if !self.walePointingDown {
-                self.walePointingDown = true
+            if !self.whalePointingDown {
+                self.whalePointingDown = true
                 var radian : CGFloat = CGFloat(M_PI * -25.0 / 180.0)
                 let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
                 self.whale.runAction(rotate)
@@ -97,15 +97,15 @@ class GameScene: SKScene {
             
             //make color lighter
             
-            if self.walePointingDown {
-                self.walePointingDown = false
+            if self.whalePointingDown {
+                self.whalePointingDown = false
                 var radian : CGFloat = CGFloat(M_PI * 25 / 180.0)
                 let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
                 self.whale.runAction(rotate)
             }
             
-            if self.walePointingUp {
-                self.walePointingUp = false
+            if self.whalePointingUp {
+                self.whalePointingUp = false
                 var radian : CGFloat = CGFloat(M_PI * -25 / 180.0)
                 let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
                 self.whale.runAction(rotate)
@@ -119,8 +119,8 @@ class GameScene: SKScene {
             //set background to blue
             self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
             self.krill.position = CGPoint(x: self.krill.position.x,y: self.krill.position.y - 0.5)
-            if !self.walePointingUp {
-                self.walePointingUp = true
+            if !self.whalePointingUp {
+                self.whalePointingUp = true
                 var radian : CGFloat = CGFloat(M_PI * 45.0 / 180.0)
                 let rotate = SKAction.rotateByAngle(radian, duration: 0.2)
                 self.whale.runAction(rotate)
