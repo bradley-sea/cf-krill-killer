@@ -18,7 +18,10 @@ class GameScene: SKScene {
     var depthLabel = SKLabelNode()
     var spawnManager : SpawnManager!
     var skAction = SKAction()
-    
+    var deltaTime = 0.0
+    var timeSinceLastFood = 0.0
+    var nextFoodTime = 0.0
+    var previousTime = 0.0
     
     override func didMoveToView(view: SKView) {
         
@@ -29,7 +32,6 @@ class GameScene: SKScene {
             //crash it:
             assert(1 == 2)
         }
-        self.spawnKrill()
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
         self.addChild(self.whale)
@@ -51,6 +53,8 @@ class GameScene: SKScene {
         krill.position = self.spawnManager.randomSpawnPoint()
         //        krill.position = CGPointMake(300, 200)
         var endPt = self.spawnManager.randomEndPoint()
+//        var duration = (arc4random() % 10) + 5
+//        var moveAction = SKAction.moveTo(endPt, duration: NSTimeInterval(duration))
         var moveAction = SKAction.moveTo(endPt, duration: 10)
         krill.runAction(moveAction)
         self.addChild(krill)
@@ -79,6 +83,19 @@ class GameScene: SKScene {
     }
     
     override func update(currentTime: CFTimeInterval) {
+        self.deltaTime = currentTime - self.previousTime
+        self.previousTime = currentTime
+        self.timeSinceLastFood += self.deltaTime
+        if self.timeSinceLastFood > self.nextFoodTime {
+            //spawn some food:
+            self.spawnKrill()
+            //generate random nextFood time:
+            println("previous food time: \(self.nextFoodTime)")
+            self.nextFoodTime = Double(arc4random() % 2000) / 1000
+            println("new food time: \(self.nextFoodTime)")
+            self.timeSinceLastFood = 0
+            print()
+        }
         /* Called before each frame is rendered */
    
         // sample of changing the background color as we go deeper
