@@ -47,7 +47,6 @@ class GameScene: SKScene {
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             
-            println(location)
         }
     }
     
