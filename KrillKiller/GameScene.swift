@@ -14,7 +14,8 @@ class GameScene: SKScene {
     var mManager = CMMotionManager()
     var whale = SKSpriteNode(imageNamed: "newWhale")
     var currentYDirection : Double = 0.0
-    
+    var currentDepth = 100.0
+    var depthLabel = SKLabelNode()
     override func didMoveToView(view: SKView) {
         
         //fix the scene size
@@ -26,6 +27,11 @@ class GameScene: SKScene {
         
         //set background to blue
         self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.3)
+        
+        //adding label to keep track of the current depth
+        self.depthLabel.position = CGPoint(x: 500, y: 20)
+        self.depthLabel.text = "\(self.currentDepth)"
+        self.addChild(self.depthLabel)
  
         self.setupMotionDetection()
     }
@@ -53,24 +59,17 @@ class GameScene: SKScene {
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
    
-        
         // sample of changing the background color as we go deeper
         //var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
         //            alpha = alpha + 0.002
         //            //set background to blue
         //            self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
 
-        
         var newValue = self.translate(self.currentYDirection)
-        //println(newValue)
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
+        self.whale.zRotation = newRadian
+        self.updateDepth(newValue)
         
-        //var y = 1 + (self.currentYDirection - 45) * (.8-1)/ (-45-45)
-        
-        
-      self.whale.zRotation = newRadian
-        
-        println(self.whale.zRotation)
     }
     
     //method used to take a our current motion value and translate it to degrees between -45 and 45
@@ -83,6 +82,39 @@ class GameScene: SKScene {
         var valueScale = (value - 0.7) / leftSpan
     
         return -45 + (valueScale * rightSpan)
+    }
+    
+    func updateDepth (newValue : Double) {
+        
+        var newDepth : Double
+        var deltaDepth : Double
+        
+        if newValue > 30 {
+            deltaDepth = -1
+            println("going super high (above 30)")
+        } else if newValue > 15 && newValue < 30 {
+            deltaDepth = -0.5
+            println("going high (above 15 and below 30")
+        } else if newValue > 5 && newValue < 15 {
+            deltaDepth = -0.25
+            println("going sorta high (above 0 and below 15")
+        } else if newValue > -5 && newValue < 5 {
+            deltaDepth = 0
+            println("chilling between 5 and -5")
+        } else if newValue > -15 && newValue < -5 {
+            println("going sorta low (above -15 and below 0")
+            deltaDepth = 0.25
+        } else if newValue > -30 && newValue < -15 {
+            println("going low (above -30 and below -15")
+            deltaDepth = 0.5
+        } else if newValue < -30 {
+            println("going super low (below -30)")
+            deltaDepth = 1.0
+        } else {
+            deltaDepth = 0
+        }
+        self.currentDepth = self.currentDepth + deltaDepth
+        self.depthLabel.text = "\(self.currentDepth)"
         
     }
 }
