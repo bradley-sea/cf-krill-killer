@@ -18,6 +18,8 @@
 		A2BF1E3219BE0E9100BAD4C0 /* KillerWhale.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */; };
 		A2BF1E3319BE0E9100BAD4C0 /* krill.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3119BE0E9100BAD4C0 /* krill.png */; };
 		A2BF1E3719BE271300BAD4C0 /* newWhale.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3619BE271300BAD4C0 /* newWhale.png */; };
+		F27CA10619BF6777005E5653 /* FoodNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27CA10519BF6777005E5653 /* FoodNode.swift */; };
+		F27CA10819BF9CC5005E5653 /* WhaleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27CA10719BF9CC5005E5653 /* WhaleNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +48,8 @@
 		A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = KillerWhale.png; sourceTree = "<group>"; };
 		A2BF1E3119BE0E9100BAD4C0 /* krill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = krill.png; sourceTree = "<group>"; };
 		A2BF1E3619BE271300BAD4C0 /* newWhale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newWhale.png; sourceTree = "<group>"; };
+		F27CA10519BF6777005E5653 /* FoodNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodNode.swift; sourceTree = "<group>"; };
+		F27CA10719BF9CC5005E5653 /* WhaleNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhaleNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +96,8 @@
 				A2BF1E1319BE0E7F00BAD4C0 /* GameScene.swift */,
 				A2BF1E1519BE0E7F00BAD4C0 /* GameViewController.swift */,
 				6D06B00519BE49790012DC6F /* SpawnManager.swift */,
+				F27CA10719BF9CC5005E5653 /* WhaleNode.swift */,
+				F27CA10519BF6777005E5653 /* FoodNode.swift */,
 				A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */,
 				A2BF1E3619BE271300BAD4C0 /* newWhale.png */,
 				A2BF1E3119BE0E9100BAD4C0 /* krill.png */,
@@ -176,6 +182,7 @@
 				TargetAttributes = {
 					A2BF1E0919BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = C65MMLEB3C;
 					};
 					A2BF1E1F19BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
@@ -230,10 +237,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F27CA10619BF6777005E5653 /* FoodNode.swift in Sources */,
 				A2BF1E1419BE0E7F00BAD4C0 /* GameScene.swift in Sources */,
 				6D06B00619BE49790012DC6F /* SpawnManager.swift in Sources */,
 				A2BF1E1619BE0E7F00BAD4C0 /* GameViewController.swift in Sources */,
 				A2BF1E1019BE0E7F00BAD4C0 /* AppDelegate.swift in Sources */,
+				F27CA10819BF9CC5005E5653 /* WhaleNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,9 +358,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = KrillKiller/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -360,9 +373,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = KrillKiller/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
