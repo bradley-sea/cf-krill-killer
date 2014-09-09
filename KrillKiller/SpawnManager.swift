@@ -9,8 +9,22 @@
 import UIKit
 
 class SpawnManager {
-    init() {
+    
+    var screenFrame : CGRect?
+    
+//    init() {
+    
+//        self.screenFrame = screenFrame
+        
+//    }
+
+
+    init(screenFrame : CGRect) {
+        
+        self.screenFrame = screenFrame
+    
     }
+
     func randomSpawnPoint() -> CGPoint {
         var xCoord = CGFloat(arc4random() % 100) + 580
         var yCoord = CGFloat(arc4random() % 520) - 100
@@ -19,6 +33,7 @@ class SpawnManager {
         print()
         return CGPointMake(xCoord, yCoord)
     }
+    
     func randomEndPoint() -> CGPoint {
         var xCoord = CGFloat(arc4random() % 50) - 100
         var yCoord = CGFloat(arc4random() % 520) - 100
@@ -26,4 +41,38 @@ class SpawnManager {
         println("y: \(yCoord)")
         return CGPointMake(xCoord, yCoord)
     }
+    
+    func generateDriftLowFarPoint(endpoint : CGPoint) -> CGPoint {
+        
+        var xCoord = endpoint.x + 100
+        var yCoord = endpoint.y - screenFrame!.height
+        println("drift low far: \(xCoord), \(yCoord)")
+        return CGPointMake(xCoord, yCoord)
+    }
+    
+    func generateDriftLowNearPoint(endpoint : CGPoint) -> CGPoint {
+        
+        var xCoord = endpoint.x + 300
+        var yCoord = endpoint.y - screenFrame!.height
+        println("drift low near: \(xCoord), \(yCoord)")
+        return CGPointMake(xCoord, yCoord)
+    }
+    
+    func generateDriftHighFarPoint(endpoint : CGPoint) -> CGPoint {
+        
+        var xCoord = endpoint.x + 100
+        var yCoord = endpoint.y + screenFrame!.height
+        println("drift high far: \(xCoord), \(yCoord)")
+        return CGPointMake(xCoord, yCoord)
+    }
+    
+    func generateDriftHighNearPoint(endpoint : CGPoint) -> CGPoint {
+        
+        var xCoord = endpoint.x + 300
+        var yCoord = endpoint.y + screenFrame!.height
+        println("drift high near: \(xCoord), \(yCoord)")
+        return CGPointMake(xCoord, yCoord)
+    }
+    
+    
 }
