@@ -17,6 +17,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var currentDepth = 100.0
     var depthLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
+    var pauseButton = SKSpriteNode(imageNamed: "pause.jpg")
     var currentScore = 0
     var spawnManager : SpawnManager!
     var skAction = SKAction()
@@ -59,13 +60,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.depthLabel)
         if let theScene = self.scene {
             self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
+            self.scoreLabel.text = "Score: \(self.currentScore)"
+            self.addChild(self.scoreLabel)
+            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: theScene.frame.height - 70)
+            self.pauseButton.size = CGSize(width: self.scoreLabel.frame.width / 4, height: self.scoreLabel.frame.height)
+            self.addChild(self.pauseButton)
         }
         else {
             //crash it:
             assert(2 == 3)
         }
-        self.scoreLabel.text = "Score: \(self.currentScore)"
-        self.addChild(self.scoreLabel)
  
         self.setupMotionDetection()
     }
@@ -113,6 +117,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
+            
+        }
+        for eachTouch in touches {
+        if CGRectContainsPoint(self.pauseButton.frame, eachTouch.locationInNode(self)) {
+            //change image, before pausing:
+            var newTexture = SKTexture(imageNamed: "play.jpg")
+            
+            self.pauseButton.texture = newTexture
+            var timer1 = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("pausePressed"), userInfo: nil, repeats: false)
+            }
+        }
+    }
+    
+    func pausePressed() {
+        if self.view?.paused == true {
+            //un-pause, before re-setting image:
+            self.view?.paused = false
+            var newTexture = SKTexture(imageNamed: "pause.jpg")
+            self.pauseButton.texture = newTexture
+        }
+        else if self.view?.paused == false {
+            //pause it. set image to play.
+            
+            self.view?.paused = true
             
         }
     }
