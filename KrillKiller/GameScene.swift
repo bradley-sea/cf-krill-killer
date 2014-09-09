@@ -163,8 +163,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func spawnKrill() {
-        self.spawnManager = SpawnManager()
-        var krill = SKSpriteNode(imageNamed: "krill")
+        self.spawnManager = SpawnManager(screenFrame: self.frame)
+        var krill = FoodNode(imageNamed: "krill")
         krill.frame.width
         krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
         krill.physicsBody?.affectedByGravity = false
@@ -469,21 +469,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func indexForAngle() -> Int {
- 
-        var index = 0
-
-        switch self.whale.angle {
-        case .Zero : index = 0
-        case .SharpDown : index = 1
-        case .SlightDown : index = 2
-        case .SharpUp : index = 3
-        case .SlightUp : index = 4
-        }
-        
-        return index
-    }
-    
     func didBeginContact(contact: SKPhysicsContact) {
         println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
         if contact.bodyA.node?.name == "food" {
@@ -495,5 +480,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.currentScore++
         }
         print()
+    }
+    
+    func indexForAngle() -> Int {
+ 
+        var index = 0
+
+        switch self.whale.angle {
+        case .Zero : index = 0
+        case .SharpDown : index = 1
+        case .SlightDown : index = 2
+        case .SharpUp : index = 3
+        case .SlightUp : index = 4
+        }
+        return index
     }
 }
