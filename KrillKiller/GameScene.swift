@@ -33,6 +33,18 @@ class GameScene: SKScene {
             //crash it:
             assert(1 == 2)
         }
+        
+        // Sky background
+        var skyImage = SKSpriteNode(imageNamed: "sky.png")
+        skyImage.position = CGPointMake(284, 290)
+        self.addChild(skyImage)
+        
+        // Clouds
+        self.setupClouds()
+
+        // Wave background
+        self.setupWaves()
+        
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
         self.addChild(self.whale)
@@ -46,6 +58,65 @@ class GameScene: SKScene {
         self.addChild(self.depthLabel)
  
         self.setupMotionDetection()
+
+    }
+    
+    func setupWaves() {
+        
+        for var i = 0; i < 2; i++ {
+
+            var newI = CGFloat(i)
+
+            var wave3bg = SKSpriteNode(imageNamed: "wave3.png")
+            wave3bg.anchorPoint = CGPointZero
+            wave3bg.position = CGPointMake(newI * wave3bg.size.width, 250)
+            wave3bg.name = "wave3"
+            self.addChild(wave3bg)
+
+            var wave2bg = SKSpriteNode(imageNamed: "wave2.png")
+            wave2bg.anchorPoint = CGPointZero
+            wave2bg.position = CGPointMake(-newI * wave2bg.size.width, 244)
+            wave2bg.name = "wave2"
+            self.addChild(wave2bg)
+
+            var wave1bg = SKSpriteNode(imageNamed: "wave1.png")
+            wave1bg.anchorPoint = CGPointZero
+            wave1bg.position = CGPointMake(newI * wave1bg.size.width, 239)
+            wave1bg.name = "wave1"
+            self.addChild(wave1bg)
+        }
+    }
+    
+    func setupClouds() {
+        
+        for var i = 0; i < 1; i++ {
+            
+            var newI = CGFloat(i)
+
+            var cloud1bg = SKSpriteNode(imageNamed: "cloud1.png")
+            cloud1bg.anchorPoint = CGPointZero
+            cloud1bg.position = CGPointMake(newI * cloud1bg.size.width - 100, 290) //3rd
+            cloud1bg.name = "cloud1"
+            self.addChild(cloud1bg)
+ 
+            var cloud2bg = SKSpriteNode(imageNamed: "cloud2.png")
+            cloud2bg.anchorPoint = CGPointZero
+            cloud2bg.position = CGPointMake(newI * cloud2bg.size.width - 60, 300) //1st
+            cloud2bg.name = "cloud2"
+            self.addChild(cloud2bg)
+ 
+            var cloud3bg = SKSpriteNode(imageNamed: "cloud3.png")
+            cloud3bg.anchorPoint = CGPointZero
+            cloud3bg.position = CGPointMake(newI * cloud3bg.size.width - 60, 293) //2nd
+            cloud3bg.name = "cloud3"
+            self.addChild(cloud3bg)
+            
+            var cloud4bg = SKSpriteNode(imageNamed: "cloud4.png")
+            cloud4bg.anchorPoint = CGPointZero
+            cloud4bg.position = CGPointMake(newI * cloud4bg.size.width - 60, 299)
+            cloud4bg.name = "cloud4"
+            self.addChild(cloud4bg)
+        }
     }
     
     func spawnKrill() {
@@ -127,6 +198,76 @@ class GameScene: SKScene {
             var curPos = child.position
             child.position = CGPointMake(child.position.x, child.position.y + 10)
         })
+        
+        // Artwork
+        // eumerate through wave1
+        self.enumerateChildNodesWithName("wave1", usingBlock: { (node, stop) -> Void in
+            if let wave1bg = node as? SKSpriteNode {
+                wave1bg.position = CGPointMake(wave1bg.position.x - 0.2, wave1bg.position.y) // sidescroll speed
+                if wave1bg.position.x <= wave1bg.size.width * -1 {
+                    wave1bg.position = CGPointMake(wave1bg.position.x + wave1bg.size.width * 2, wave1bg.position.y)
+                }
+            }
+        })
+        
+        // eumerate through wave2
+        self.enumerateChildNodesWithName("wave2", usingBlock: { (node, stop) -> Void in
+            if let wave2bg = node as? SKSpriteNode {
+                wave2bg.position = CGPointMake(wave2bg.position.x + 0.3, wave2bg.position.y) // sidescroll speed
+                if wave2bg.position.x >= wave2bg.size.width * 1 {
+                    wave2bg.position = CGPointMake(wave2bg.position.x - wave2bg.size.width * 2, wave2bg.position.y)
+                }
+            }
+        })
+        
+        // eumerate through wave3
+        self.enumerateChildNodesWithName("wave3", usingBlock: { (node, stop) -> Void in
+            if let wave3bg = node as? SKSpriteNode {
+                wave3bg.position = CGPointMake(wave3bg.position.x - 0.5, wave3bg.position.y) // sidescroll speed
+                if wave3bg.position.x <= wave3bg.size.width * -1 {
+                    wave3bg.position = CGPointMake(wave3bg.position.x + wave3bg.size.width * 2, wave3bg.position.y)
+                }
+            }
+        })
+        
+        self.enumerateChildNodesWithName("cloud1", usingBlock: { (node, stop) -> Void in
+            if let cloud1bg = node as? SKSpriteNode {
+                cloud1bg.position = CGPointMake(cloud1bg.position.x - 0.13, cloud1bg.position.y) // sidescroll speed
+                if cloud1bg.position.x <= cloud1bg.size.width * -1 {
+                    cloud1bg.position = CGPointMake(cloud1bg.position.x + 1000, cloud1bg.position.y)
+                }
+            }
+        })
+        
+        self.enumerateChildNodesWithName("cloud2", usingBlock: { (node, stop) -> Void in
+            if let cloud2bg = node as? SKSpriteNode {
+                cloud2bg.position = CGPointMake(cloud2bg.position.x - 0.10, cloud2bg.position.y) // sidescroll speed
+                if cloud2bg.position.x <= cloud2bg.size.width * -1 {
+                    cloud2bg.position = CGPointMake(cloud2bg.position.x + 650, cloud2bg.position.y)
+                }
+            }
+        })
+        
+        self.enumerateChildNodesWithName("cloud3", usingBlock: { (node, stop) -> Void in
+            if let cloud3bg = node as? SKSpriteNode {
+                cloud3bg.position = CGPointMake(cloud3bg.position.x - 0.18, cloud3bg.position.y) // sidescroll speed
+                if cloud3bg.position.x <= cloud3bg.size.width * -1 {
+                    cloud3bg.position = CGPointMake(cloud3bg.position.x + 830, cloud3bg.position.y)
+                }
+            }
+        })
+        
+        self.enumerateChildNodesWithName("cloud4", usingBlock: { (node, stop) -> Void in
+            if let cloud4bg = node as? SKSpriteNode {
+                cloud4bg.position = CGPointMake(cloud4bg.position.x - 0.08, cloud4bg.position.y) // sidescroll speed
+                if cloud4bg.position.x <= cloud4bg.size.width * -1 {
+                    cloud4bg.position = CGPointMake(cloud4bg.position.x + 910, cloud4bg.position.y)
+                }
+            }
+        })
+
+
+
     }
     
     //method used to take a our current motion value and translate it to degrees between -45 and 45
