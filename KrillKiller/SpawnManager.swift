@@ -52,7 +52,7 @@ class SpawnManager {
     
     func generateDriftLowNearPoint(endpoint : CGPoint) -> CGPoint {
         
-        var xCoord = endpoint.x + 300
+        var xCoord = endpoint.x + 100
         var yCoord = endpoint.y - screenFrame!.height
         println("drift low near: \(xCoord), \(yCoord)")
         return CGPointMake(xCoord, yCoord)
@@ -68,7 +68,7 @@ class SpawnManager {
     
     func generateDriftHighNearPoint(endpoint : CGPoint) -> CGPoint {
         
-        var xCoord = endpoint.x + 300
+        var xCoord = endpoint.x + 100
         var yCoord = endpoint.y + screenFrame!.height
         println("drift high near: \(xCoord), \(yCoord)")
         return CGPointMake(xCoord, yCoord)

@@ -24,7 +24,7 @@ class FoodNode: SKSpriteNode {
     var endPoints = [CGPoint]()
 
     func fillPointsArray() {
-        self.endPoints = [self.startPoint!, self.driftLowNearPoint!, self.driftLowFarPoint!, self.driftHighNearPoint!, self.driftHighFarPoint!]
+        self.endPoints = [self.endPoint!, self.driftLowNearPoint!, self.driftLowFarPoint!, self.driftHighNearPoint!, self.driftHighFarPoint!]
     }
     
 }

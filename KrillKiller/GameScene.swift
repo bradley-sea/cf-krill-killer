@@ -155,11 +155,15 @@ class GameScene: SKScene {
         
         krill.fillPointsArray()
         
+        var index = self.indexForAngle()
+        
+        var endPoint = krill.endPoints[index]
+        
 //        var duration = (arc4random() % 10) + 5
 //        var moveAction = SKAction.moveTo(endPt, duration: NSTimeInterval(duration))
-        var moveAction = SKAction.moveTo(endPt, duration: 10)
+        var moveAction = SKAction.moveTo(endPoint, duration: 2)
         var removeAction = SKAction.runBlock { () -> Void in
-            krill.removeFromParent()
+        krill.removeFromParent()
         }
         //ensures krill removed from taking up memory:
         var actions = SKAction.sequence([moveAction,removeAction])
@@ -305,7 +309,6 @@ class GameScene: SKScene {
             }
         })
 
-
     }
     
     //method used to take a our current motion value and translate it to degrees between -45 and 45
@@ -388,15 +391,7 @@ class GameScene: SKScene {
     
     func applyNewAngle() {
         
-        var index = 0
-        
-        switch self.whale.angle {
-            case .Zero : index = 0
-            case .SharpDown : index = 1
-            case .SlightDown : index = 2
-            case .SharpUp : index = 3
-            case .SlightUp : index = 4
-        }
+        var index = self.indexForAngle()
         
         self.enumerateChildNodesWithName("food", usingBlock: { (node, stop) -> Void in
             if let foodNode = node as? FoodNode {
@@ -404,11 +399,31 @@ class GameScene: SKScene {
                 
                 foodNode.removeAllActions()
                 
-                var mover = SKAction.moveTo(endPoint, duration: 5)
-                foodNode.runAction(mover)
+                var mover = SKAction.moveTo(endPoint, duration: 2)
+                var removeMoverAction = SKAction.runBlock({ () -> Void in
+                    foodNode.removeFromParent()
+                })
+                
+                var actions = SKAction.sequence([mover, removeMoverAction])
+                foodNode.runAction(actions)
             }
         })
         
         
+    }
+    
+    func indexForAngle() -> Int {
+ 
+        var index = 0
+
+        switch self.whale.angle {
+        case .Zero : index = 0
+        case .SharpDown : index = 1
+        case .SlightDown : index = 2
+        case .SharpUp : index = 3
+        case .SlightUp : index = 4
+        }
+        
+        return index
     }
 }
