@@ -9,13 +9,15 @@
 import SpriteKit
 import CoreMotion
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var mManager = CMMotionManager()
     var whale = SKSpriteNode(imageNamed: "newWhale")
     var currentYDirection : Double = 0.0
     var currentDepth = 100.0
     var depthLabel = SKLabelNode()
+    var scoreLabel = SKLabelNode()
+    var currentScore = 0
     var spawnManager : SpawnManager!
     var skAction = SKAction()
     var deltaTime = 0.0
@@ -24,8 +26,12 @@ class GameScene: SKScene {
     var previousTime = 0.0
     var foodYDelta = 0.0
     
+    //categories:
+    let whaleCategory = 0x1 << 0
+    let krillCategory = 0x1 << 1
+    
     override func didMoveToView(view: SKView) {
-        
+        self.physicsWorld.contactDelegate = self
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -35,6 +41,13 @@ class GameScene: SKScene {
         }
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
+        self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
+        self.whale.physicsBody?.affectedByGravity = false
+        self.whale.name = "whale"
+//        self.whale.physicsBody?.contactTestBitMask = 1
+        self.whale.physicsBody?.categoryBitMask = UInt32(whaleCategory)
+        self.whale.physicsBody?.contactTestBitMask = UInt32(krillCategory)
+        self.whale.physicsBody?.collisionBitMask = 0
         self.addChild(self.whale)
         
         //set background to blue
@@ -44,6 +57,15 @@ class GameScene: SKScene {
         self.depthLabel.position = CGPoint(x: 500, y: 20)
         self.depthLabel.text = "\(self.currentDepth)"
         self.addChild(self.depthLabel)
+        if let theScene = self.scene {
+            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
+        }
+        else {
+            //crash it:
+            assert(2 == 3)
+        }
+        self.scoreLabel.text = "Score: \(self.currentScore)"
+        self.addChild(self.scoreLabel)
  
         self.setupMotionDetection()
     }
@@ -51,6 +73,12 @@ class GameScene: SKScene {
     func spawnKrill() {
         self.spawnManager = SpawnManager()
         var krill = SKSpriteNode(imageNamed: "krill")
+        krill.frame.width
+        krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
+        krill.physicsBody?.affectedByGravity = false
+        krill.physicsBody?.categoryBitMask = UInt32(krillCategory)
+        krill.physicsBody?.contactTestBitMask = UInt32(whaleCategory)
+        krill.physicsBody?.collisionBitMask = 0
         krill.name = "food"
         krill.position = self.spawnManager.randomSpawnPoint()
         //        krill.position = CGPointMake(300, 200)
@@ -93,6 +121,7 @@ class GameScene: SKScene {
         self.deltaTime = currentTime - self.previousTime
         self.previousTime = currentTime
         self.timeSinceLastFood += self.deltaTime
+        self.scoreLabel.text = "Score: \(self.currentScore)"
         if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
             self.spawnKrill()
@@ -175,5 +204,18 @@ class GameScene: SKScene {
         self.currentDepth = self.currentDepth + deltaDepth
         self.depthLabel.text = "\(self.currentDepth)"
         
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
+        if contact.bodyA.node?.name == "food" {
+            contact.bodyA.node?.removeFromParent()
+            self.currentScore++
+        }
+        if contact.bodyB.node?.name == "food" {
+            contact.bodyB.node?.removeFromParent()
+            self.currentScore++
+        }
+        print()
     }
 }
