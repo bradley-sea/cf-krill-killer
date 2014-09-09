@@ -9,13 +9,16 @@
 import SpriteKit
 import CoreMotion
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var mManager = CMMotionManager()
     var whale = WhaleNode(imageNamed: "newWhale")
     var currentYDirection : Double = 0.0
     var currentDepth = 100.0
     var depthLabel = SKLabelNode()
+    var scoreLabel = SKLabelNode()
+    var pauseButton = SKSpriteNode(imageNamed: "pause.jpg")
+    var currentScore = 0
     var spawnManager : SpawnManager!
     var skAction = SKAction()
     var deltaTime = 0.0
@@ -24,8 +27,12 @@ class GameScene: SKScene {
     var previousTime = 0.0
     var foodYDelta = 0.0
     
+    //categories:
+    let whaleCategory = 0x1 << 0
+    let krillCategory = 0x1 << 1
+    
     override func didMoveToView(view: SKView) {
-        
+        self.physicsWorld.contactDelegate = self
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -50,6 +57,13 @@ class GameScene: SKScene {
         
         //add whale
         self.whale.position = CGPoint(x: 35, y: 150)
+        self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
+        self.whale.physicsBody?.affectedByGravity = false
+        self.whale.name = "whale"
+//        self.whale.physicsBody?.contactTestBitMask = 1
+        self.whale.physicsBody?.categoryBitMask = UInt32(whaleCategory)
+        self.whale.physicsBody?.contactTestBitMask = UInt32(krillCategory)
+        self.whale.physicsBody?.collisionBitMask = 0
         self.addChild(self.whale)
         
         //set background to blue
@@ -59,6 +73,18 @@ class GameScene: SKScene {
         self.depthLabel.position = CGPoint(x: 500, y: 20)
         self.depthLabel.text = "\(self.currentDepth)"
         self.addChild(self.depthLabel)
+        if let theScene = self.scene {
+            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
+            self.scoreLabel.text = "Score: \(self.currentScore)"
+            self.addChild(self.scoreLabel)
+            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: theScene.frame.height - 70)
+            self.pauseButton.size = CGSize(width: self.scoreLabel.frame.width / 4, height: self.scoreLabel.frame.height)
+            self.addChild(self.pauseButton)
+        }
+        else {
+            //crash it:
+            assert(2 == 3)
+        }
  
         self.setupMotionDetection()
 
@@ -139,6 +165,12 @@ class GameScene: SKScene {
     func spawnKrill() {
         self.spawnManager = SpawnManager(screenFrame: self.frame)
         var krill = FoodNode(imageNamed: "krill")
+        krill.frame.width
+        krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
+        krill.physicsBody?.affectedByGravity = false
+        krill.physicsBody?.categoryBitMask = UInt32(krillCategory)
+        krill.physicsBody?.contactTestBitMask = UInt32(whaleCategory)
+        krill.physicsBody?.collisionBitMask = 0
         krill.name = "food"
         
         krill.startPoint = self.spawnManager.randomSpawnPoint()
@@ -191,12 +223,37 @@ class GameScene: SKScene {
             let location = touch.locationInNode(self)
             
         }
+        for eachTouch in touches {
+        if CGRectContainsPoint(self.pauseButton.frame, eachTouch.locationInNode(self)) {
+            //change image, before pausing:
+            var newTexture = SKTexture(imageNamed: "play.jpg")
+            
+            self.pauseButton.texture = newTexture
+            var timer1 = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("pausePressed"), userInfo: nil, repeats: false)
+            }
+        }
+    }
+    
+    func pausePressed() {
+        if self.view?.paused == true {
+            //un-pause, before re-setting image:
+            self.view?.paused = false
+            var newTexture = SKTexture(imageNamed: "pause.jpg")
+            self.pauseButton.texture = newTexture
+        }
+        else if self.view?.paused == false {
+            //pause it. set image to play.
+            
+            self.view?.paused = true
+            
+        }
     }
     
     override func update(currentTime: CFTimeInterval) {
         self.deltaTime = currentTime - self.previousTime
         self.previousTime = currentTime
         self.timeSinceLastFood += self.deltaTime
+        self.scoreLabel.text = "Score: \(self.currentScore)"
         if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
             self.spawnKrill()
@@ -412,6 +469,19 @@ class GameScene: SKScene {
         
     }
     
+    func didBeginContact(contact: SKPhysicsContact) {
+        println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
+        if contact.bodyA.node?.name == "food" {
+            contact.bodyA.node?.removeFromParent()
+            self.currentScore++
+        }
+        if contact.bodyB.node?.name == "food" {
+            contact.bodyB.node?.removeFromParent()
+            self.currentScore++
+        }
+        print()
+    }
+    
     func indexForAngle() -> Int {
  
         var index = 0
@@ -423,7 +493,6 @@ class GameScene: SKScene {
         case .SharpUp : index = 3
         case .SlightUp : index = 4
         }
-        
         return index
     }
 }

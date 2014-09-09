@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6D06B00619BE49790012DC6F /* SpawnManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D06B00519BE49790012DC6F /* SpawnManager.swift */; };
+		6D06B09C19BFA8BB0012DC6F /* pause.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6D06B09B19BFA8BB0012DC6F /* pause.jpg */; };
+		6D06B09E19BFAA580012DC6F /* play.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6D06B09D19BFAA580012DC6F /* play.jpg */; };
 		A2BF1E1019BE0E7F00BAD4C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E0F19BE0E7F00BAD4C0 /* AppDelegate.swift */; };
 		A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E1119BE0E7F00BAD4C0 /* GameScene.sks */; };
 		A2BF1E1419BE0E7F00BAD4C0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E1319BE0E7F00BAD4C0 /* GameScene.swift */; };
@@ -34,6 +36,8 @@
 
 /* Begin PBXFileReference section */
 		6D06B00519BE49790012DC6F /* SpawnManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpawnManager.swift; sourceTree = "<group>"; };
+		6D06B09B19BFA8BB0012DC6F /* pause.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pause.jpg; sourceTree = "<group>"; };
+		6D06B09D19BFAA580012DC6F /* play.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = play.jpg; sourceTree = "<group>"; };
 		A2BF1E0A19BE0E7F00BAD4C0 /* KrillKiller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KrillKiller.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2BF1E0E19BE0E7F00BAD4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2BF1E0F19BE0E7F00BAD4C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -101,6 +105,8 @@
 				A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */,
 				A2BF1E3619BE271300BAD4C0 /* newWhale.png */,
 				A2BF1E3119BE0E9100BAD4C0 /* krill.png */,
+				6D06B09B19BFA8BB0012DC6F /* pause.jpg */,
+				6D06B09D19BFAA580012DC6F /* play.jpg */,
 				A2BF1E1719BE0E7F00BAD4C0 /* Main.storyboard */,
 				A2BF1E1A19BE0E7F00BAD4C0 /* Images.xcassets */,
 				A2BF1E0D19BE0E7F00BAD4C0 /* Supporting Files */,
@@ -182,10 +188,11 @@
 				TargetAttributes = {
 					A2BF1E0919BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = C65MMLEB3C;
+						DevelopmentTeam = L897SQDS85;
 					};
 					A2BF1E1F19BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = L897SQDS85;
 						TestTargetID = A2BF1E0919BE0E7F00BAD4C0;
 					};
 				};
@@ -217,7 +224,9 @@
 				A2BF1E3719BE271300BAD4C0 /* newWhale.png in Resources */,
 				A2BF1E1B19BE0E7F00BAD4C0 /* Images.xcassets in Resources */,
 				A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */,
+				6D06B09C19BFA8BB0012DC6F /* pause.jpg in Resources */,
 				A2BF1E3219BE0E9100BAD4C0 /* KillerWhale.png in Resources */,
+				6D06B09E19BFAA580012DC6F /* play.jpg in Resources */,
 				A2BF1E3319BE0E9100BAD4C0 /* krill.png in Resources */,
 				A2BF1E1919BE0E7F00BAD4C0 /* Main.storyboard in Resources */,
 			);
