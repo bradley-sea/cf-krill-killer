@@ -14,7 +14,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var mManager = CMMotionManager()
     var whale = WhaleNode(imageNamed: "orca_01.png")
     var currentYDirection : Double = 0.0
-    var currentDepth = 100.0
+    var currentDepth = 50.0
     var depthLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
     var pauseButton = SKSpriteNode(imageNamed: "pause.jpg")
@@ -31,6 +31,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let whaleCategory = 0x1 << 0
     let krillCategory = 0x1 << 1
     
+    // health bar
+    var oxygen = 100.0
+    var healthBarLocation : CGPoint!
+    var healthBarWidth = 200
+    var healthBarHeight = 20
+    var healthBar : SKSpriteNode!
+    
+    // view properties
+    var oceanDepth = 2000
+    var ocean : SKSpriteNode!
+    var middleXPosition : Int!
+    
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
         if let theSize = self.view?.bounds.size {
@@ -41,22 +53,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             assert(1 == 2)
         }
         
+        self.ocean = SKSpriteNode(color: UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5), size: CGSize(width: 600, height: oceanDepth))
+        middleXPosition = Int(scene!.size.height / 2)
+        
         // Ocean background
-        self.setupOcean()
-
+//        self.setupOcean()
+        self.ocean.anchorPoint = CGPoint(x: 0, y: 0)
+        //self.ocean.position = CGPoint(x: 0, y: 0)
+        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+        self.addChild(ocean)
+        
         // Sky background
         var skyBG = SKSpriteNode(imageNamed: "sky_01.png")
         skyBG.position = CGPointMake(284, 290)
-        self.addChild(skyBG)
+//        self.addChild(skyBG)
         
         // Clouds
-        self.setupClouds()
+//        self.setupClouds()
 
         // Wave background
-        self.setupWaves()
+//        self.setupWaves()
         
         //add whale
-        self.whale.position = CGPoint(x: 74, y: 160)
+        self.whale.position = CGPoint(x: 35, y: self.middleXPosition)
         self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
         self.whale.physicsBody?.affectedByGravity = false
         self.whale.name = "whale"
@@ -66,8 +85,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.whale.physicsBody?.collisionBitMask = 0
         self.addChild(self.whale)
         
+        //add krill
+//        self.krill.position = CGPoint(x: self.size.width + -50, y: 150)
+//        
+//        self.addChild(self.krill)
+//        
+//        var mover = SKAction.moveToX(-100, duration: 10.0)
+//        self.krill.runAction(mover)
+        
+        
         //set background to blue
-//        self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.3)
+        self.backgroundColor = UIColor.grayColor()
         
         //adding label to keep track of the current depth
         self.depthLabel.position = CGPoint(x: 280, y: 10)
@@ -101,10 +129,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //crash it:
             assert(2 == 3)
         }
+        
+        //add health bar
+        var oxygen : Double = 100
+        var oxygenMask : SKSpriteNode!
+        var healthCropNode = SKCropNode()
+        healthBarLocation = CGPoint(x: 110, y: self.scene!.size.height - 20)
+        var healthBarBackground = SKSpriteNode(color: UIColor.grayColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
+        healthBarBackground.position = healthBarLocation
+        self.addChild(healthBarBackground)
+        healthBar = SKSpriteNode(color: UIColor.greenColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
+        healthBar.position = CGPoint(x: (healthBarLocation.x - CGFloat(healthBarWidth/2)),
+                                     y: (healthBarLocation.y - CGFloat((healthBarHeight/2))))
+        self.addChild(healthBar)
+        healthBar.anchorPoint = CGPoint(x: 0, y: 0)
+
  
         self.setupMotionDetection()
 
     }
+    
+    
     
     func setupOcean() {
         
@@ -206,19 +251,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         krill.position = krill.startPoint!
         
-        var endPt = self.spawnManager.randomEndPoint()
-        krill.endPoint = endPt
-
-        krill.driftLowNearPoint = spawnManager.generateDriftLowNearPoint(endPt)
-        krill.driftLowFarPoint = spawnManager.generateDriftLowFarPoint(endPt)
-        krill.driftHighNearPoint = spawnManager.generateDriftHighNearPoint(endPt)
-        krill.driftHighFarPoint = spawnManager.generateDriftHighFarPoint(endPt)
+        var endPoint = self.spawnManager.randomEndPoint()
+        krill.endPoint = endPoint
         
-        krill.fillPointsArray()
-        
-        var index = self.indexForAngle()
-        
-        var endPoint = krill.endPoints[index]
         
 //        var duration = (arc4random() % 10) + 5
 //        var moveAction = SKAction.moveTo(endPt, duration: NSTimeInterval(duration))
@@ -231,7 +266,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         krill.runAction(actions)
         self.addChild(krill)
         println("startpt: \(krill.position)")
-        println("endpt: \(endPt)")
+        println("endpt: \(endPoint)")
     }
     
     func setupMotionDetection() {
@@ -239,9 +274,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.mManager.accelerometerUpdateInterval = 0.05
         self.mManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue()) { (accelerometerData : CMAccelerometerData!, error) in
             
-            //keeping track of the devices orientation in relation to our gameplay. we will use this property in our update loop to figure out which way the wale should be pointing
+            self.currentYDirection = accelerometerData.acceleration.y
             
-            self.currentYDirection = accelerometerData.acceleration.y // CHECK: screen rotation changes whale rotation
+            println(accelerometerData.acceleration.y)
+            
         }
     }
     
@@ -318,12 +354,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //get whale's angle.
         //for eachObject:
         //move its currentposition (y-coordinate) oppositely.
-        self.enumerateChildNodesWithName("food", usingBlock: { (child, stop) -> Void in
-            //check what angle
-            var getAngle = self.whale.zRotation
-            var curPos = child.position
-            child.position = CGPointMake(child.position.x, child.position.y + 10)
-        })
+//        self.enumerateChildNodesWithName("food", usingBlock: { (child, stop) -> Void in
+//            //check what angle
+//            var getAngle = self.whale.zRotation
+//            var curPos = child.position
+//            child.position = CGPointMake(child.position.x, child.position.y + 10)
+//        })
         
         // Artwork
         // eumerate through wave1
@@ -402,13 +438,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         })
 
+        updateHealthBar()
     }
     
     //method used to take a our current motion value and translate it to degrees between -45 and 45
     func translate(value : Double) -> Double {
         
-        var leftSpan = -0.7 - (0.7) //1.4
-        var rightSpan = 45.0 - (-45.0) // 90
+        var leftSpan = -0.7 - (0.7)
+        var rightSpan = 45.0 - (-45.0)
         
         //convert left range into a 0-1 range 
         var valueScale = (value - 0.7) / leftSpan
@@ -416,70 +453,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return -45 + (valueScale * rightSpan)
     }
     
-    func updateDepth (newValue : Double) {
-        
-        var newDepth : Double
-        var deltaDepth : Double
-        
-        if newValue > 30 {
-            if self.whale.angle != .SharpDown {
-                self.whale.angle = .SharpDown
-                self.applyNewAngle()
-            }
-            deltaDepth = -1
-            self.foodYDelta = -1
-        } else if newValue > 15 && newValue < 30 {
-            if self.whale.angle != .SlightDown {
-                self.whale.angle = .SlightDown
-                self.applyNewAngle()
-            }
-            deltaDepth = -0.5
-            self.foodYDelta = -0.5
-        } else if newValue > 5 && newValue < 15 {
-            if self.whale.angle != .Zero {
-                self.whale.angle = .Zero
-                self.applyNewAngle()
-            }
-            deltaDepth = -0.25
-            self.foodYDelta = -0.25
-        } else if newValue > -5 && newValue < 5 {
-            if self.whale.angle != .Zero {
-                self.whale.angle = .Zero
-                self.applyNewAngle()
-            }
-            deltaDepth = 0
-            self.foodYDelta = 0.0
-        } else if newValue > -15 && newValue < -5 {
-            if self.whale.angle != .Zero {
-                self.whale.angle = .Zero
-                self.applyNewAngle()
-            }
-            deltaDepth = 0.25
-            self.foodYDelta = 0.25
-        } else if newValue > -30 && newValue < -15 {
-            if self.whale.angle != .SlightUp {
-                self.whale.angle = .SlightUp
-                self.applyNewAngle()
-            }
-            deltaDepth = 0.5
-            self.foodYDelta = 0.5
-        } else if newValue < -30 {
-            if self.whale.angle != .SharpUp {
-                self.whale.angle = .SharpUp
-                self.applyNewAngle()
-            }
-            deltaDepth = 1.0
-            self.foodYDelta = 1.0
-        } else {
-            if self.whale.angle != .Zero {
-                self.whale.angle = .Zero
-                self.applyNewAngle()
-            }
-            deltaDepth = 0
-            self.foodYDelta = 0.0
-        }
-        self.currentDepth = self.currentDepth + deltaDepth
-        self.depthLabel.text = "\(self.currentDepth)"
+    func updateDepth (angle : Double) {
+        // angle = ~ current angle, value between -30 and 30
+
+        self.depthLabel.text = "Current Depth: \(self.currentDepth)"
+        self.currentDepth -= (angle / 10)
+        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
     }
     
     func applyNewAngle() {
@@ -528,5 +507,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case .SlightUp : index = 4
         }
         return index
+    }
+    
+    func updateHealthBar() {
+        oxygen -= 0.1
+        
+        if currentDepth < 1 {
+            if oxygen < 100 {
+                oxygen += 5
+            }
+        }
+        
+        if oxygen > 0 {
+            healthBar.size.width = CGFloat((healthBarWidth / 100)) * CGFloat(oxygen)
+        } else {
+            healthBar.size.width = 0
+        }
     }
 }
