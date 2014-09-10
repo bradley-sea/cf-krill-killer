@@ -12,7 +12,7 @@ import CoreMotion
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var mManager = CMMotionManager()
-    var whale = WhaleNode(imageNamed: "newWhale")
+    var whale = WhaleNode(imageNamed: "orca01.png")
     var currentYDirection : Double = 0.0
     var currentDepth = 100.0
     var depthLabel = SKLabelNode()
@@ -56,7 +56,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.setupWaves()
         
         //add whale
-        self.whale.position = CGPoint(x: 35, y: 150)
+        self.whale.position = CGPoint(x: 74, y: 160)
         self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
         self.whale.physicsBody?.affectedByGravity = false
         self.whale.name = "whale"
@@ -67,19 +67,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.whale)
         
         //set background to blue
-        self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.3)
+//        self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.3)
         
         //adding label to keep track of the current depth
-        self.depthLabel.position = CGPoint(x: 500, y: 20)
+        self.depthLabel.position = CGPoint(x: 280, y: 10)
         self.depthLabel.text = "\(self.currentDepth)"
         self.addChild(self.depthLabel)
         if let theScene = self.scene {
-            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
-            self.scoreLabel.text = "Score: \(self.currentScore)"
+//            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
+            self.scoreLabel.position = CGPoint(x: 30, y: 18)
+            self.scoreLabel.fontName = "Copperplate"
+            self.scoreLabel.fontSize = 20
+            self.scoreLabel.fontColor = UIColor(red: 128.0/255.0, green: 179.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+            self.scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
+            //self.scoreLabel.text = "\(self.currentScore)"
             self.addChild(self.scoreLabel)
             self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: theScene.frame.height - 70)
             self.pauseButton.size = CGSize(width: self.scoreLabel.frame.width / 4, height: self.scoreLabel.frame.height)
             self.addChild(self.pauseButton)
+            
+        // Score bar
+        var scoreBar = SKSpriteNode(imageNamed: "scorebar.png")
+        scoreBar.position = CGPointMake(45, 24)
+        self.addChild(scoreBar)
+        
+        // Lifemeter bar
+        var lifeMeterBar = SKSpriteNode(imageNamed: "lifemeterbar.png")
+        lifeMeterBar.position = CGPointMake(theScene.frame.width - 46, 24)
+        self.addChild(lifeMeterBar)
+            
         }
         else {
             //crash it:
@@ -212,7 +228,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             //keeping track of the devices orientation in relation to our gameplay. we will use this property in our update loop to figure out which way the wale should be pointing
             
-            self.currentYDirection = accelerometerData.acceleration.y
+            self.currentYDirection = accelerometerData.acceleration.y // CHECK: screen rotation changes whale rotation
         }
     }
     
@@ -245,7 +261,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //pause it. set image to play.
             
             self.view?.paused = true
-            
         }
     }
     
@@ -253,7 +268,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.deltaTime = currentTime - self.previousTime
         self.previousTime = currentTime
         self.timeSinceLastFood += self.deltaTime
-        self.scoreLabel.text = "Score: \(self.currentScore)"
+        self.scoreLabel.text = "\(self.currentScore)"
         if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
             self.spawnKrill()
@@ -264,7 +279,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.timeSinceLastFood = 0
             print()
         }
-        
         
         /* Called before each frame is rendered */
    
@@ -465,8 +479,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 foodNode.runAction(actions)
             }
         })
-        
-        
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
