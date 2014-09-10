@@ -10,10 +10,14 @@ import UIKit
 import SpriteKit
 
 class SpawnController {
+    //categories:
+    let whaleCategory = 0x1 << 0
+    let krillCategory = 0x1 << 1
     
     let spawnArea : CGRect
     var frequency : Double
     var ocean : SKNode
+    var depthLevel : Int
     var deltaTime = 0.0
     var timeSinceLastSpawn = 0.0
     var previousTime = 0.0
@@ -21,6 +25,7 @@ class SpawnController {
     
     init(spawnArea : CGRect, depthLevel : Int, frequency : Double, theOcean : SKSpriteNode) {
         self.spawnArea = spawnArea
+        self.depthLevel = depthLevel
         self.frequency = frequency
         self.ocean = theOcean
     }
@@ -39,7 +44,13 @@ class SpawnController {
     }
     func spawnFood() {
         
-        var krill = SKSpriteNode(imageNamed: "krill")
+        var krill = FoodNode(depthLevel: self.depthLevel)
+//        krill.name = "food"
+        krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
+        krill.physicsBody?.affectedByGravity = false
+        krill.physicsBody?.categoryBitMask = UInt32(krillCategory)
+        krill.physicsBody?.contactTestBitMask = UInt32(whaleCategory)
+        krill.physicsBody?.collisionBitMask = 0
         
         var xCoord = CGFloat(arc4random() % UInt32(spawnArea.width) + UInt32(spawnArea.origin.x))
         var yCoord = CGFloat(arc4random() % UInt32(spawnArea.height) + UInt32(spawnArea.origin.y))

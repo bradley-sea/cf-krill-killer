@@ -161,9 +161,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupSpawnControllers() {
         
         var area1 = CGRect(x: self.view!.frame.width + 20, y: 1334, width: 200, height: 666)
-        var spawnController1 = SpawnController(spawnArea: area1, depthLevel: 1, frequency: 1.0, theOcean: self.ocean)
+        var spawnController1 = SpawnController(spawnArea: area1, depthLevel: 1, frequency: 0.5, theOcean: self.ocean)
         self.spawnControllers.append(spawnController1)
         
+        var area2 = CGRect(x: self.view!.frame.width + 20, y: 668, width: 200, height: 666)
+        var spawnController2 = SpawnController(spawnArea: area2, depthLevel: 2, frequency: 1.0, theOcean: self.ocean)
+        self.spawnControllers.append(spawnController2)
+        
+        var area3 = CGRect(x: self.view!.frame.width + 20, y: 0, width: 200, height: 666)
+        var spawnController3 = SpawnController(spawnArea: area3, depthLevel: 3, frequency: 2.0, theOcean: self.ocean)
+        self.spawnControllers.append(spawnController3)
     }
     
     
@@ -513,13 +520,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
-        if contact.bodyA.node?.name == "food" {
-            contact.bodyA.node?.removeFromParent()
-            self.currentScore++
-        }
-        if contact.bodyB.node?.name == "food" {
-            contact.bodyB.node?.removeFromParent()
-            self.currentScore++
+        var bodies = [contact.bodyA,contact.bodyB]
+        for eachBody in bodies {
+            if let foodNode = eachBody.node as? FoodNode {
+                var foodName = foodNode.imageName
+                if foodName == "krill" {
+                    foodNode.removeFromParent()
+                    self.currentScore += 0
+                }
+                else if foodName == "fishsmall_01" || foodName == "fishsmall_02" || foodName == "fishsmall_03" {
+                    eachBody.node?.removeFromParent()
+                    self.currentScore += 1
+                }
+                else if foodName == "fishmed_01" || foodName == "fishmed_02" || foodName == "fishmed_03" {
+                    eachBody.node?.removeFromParent()
+                    self.currentScore += 5
+                }
+                else if foodName == "fishlarge_01" || foodName == "fishlarge_02" || foodName == "fishlarge_03" {
+                    eachBody.node? .removeFromParent()
+                    self.currentScore += 10
+                }
+            }
         }
         print()
     }
