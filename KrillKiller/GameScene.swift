@@ -11,9 +11,7 @@ import CoreMotion
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    var mManager = CMMotionManager()
     var whale = WhaleNode(imageNamed: "orca_01.png")
-    var currentYDirection : Double = 0.0
     var currentDepth = 50.0
     var depthLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
@@ -43,8 +41,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var ocean : SKSpriteNode!
     var middleXPosition : Int!
     
+    //motion properties
+    var mManager = CMMotionManager()
+    var currentYDirection : Double = 0.0
+    
+    //spawn controllers
+    var spawnControllers = [SpawnController]()
+    
+    
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
+        
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -110,8 +117,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
             //self.scoreLabel.text = "\(self.currentScore)"
             self.addChild(self.scoreLabel)
-            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: theScene.frame.height - 70)
-            self.pauseButton.size = CGSize(width: self.scoreLabel.frame.width / 4, height: self.scoreLabel.frame.height)
+            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: 48)
+            self.pauseButton.size = CGSize(width: 25, height: 25)
             self.addChild(self.pauseButton)
             
         // Score bar
@@ -146,9 +153,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
  
         self.setupMotionDetection()
+        
+        self.setupSpawnControllers()
 
     }
     
+    func setupSpawnControllers() {
+        
+        var area1 = CGRect(x: self.view!.frame.width + 20, y: 1334, width: 200, height: 666)
+        var spawnController1 = SpawnController(spawnArea: area1, depthLevel: 1, frequency: 0.5, theOcean: self.ocean)
+        self.spawnControllers.append(spawnController1)
+        
+        var area2 = CGRect(x: self.view!.frame.width + 20, y: 668, width: 200, height: 666)
+        var spawnController2 = SpawnController(spawnArea: area2, depthLevel: 2, frequency: 1.0, theOcean: self.ocean)
+        self.spawnControllers.append(spawnController2)
+        
+        var area3 = CGRect(x: self.view!.frame.width + 20, y: 0, width: 200, height: 666)
+        var spawnController3 = SpawnController(spawnArea: area3, depthLevel: 3, frequency: 2.0, theOcean: self.ocean)
+        self.spawnControllers.append(spawnController3)
+    }
     
     
     func setupOcean() {
@@ -225,14 +248,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func spawnKrill() {
         self.spawnManager = SpawnManager(screenFrame: self.frame)
-        var krill = FoodNode(imageNamed: "krill")
+        //check current depth
+        var depthLevel = 1
+        if self.currentDepth < 600 {
+            depthLevel = 1
+        }
+        else if self.currentDepth < 1200 {
+            depthLevel = 2
+        }
+        else {
+            depthLevel = 3
+        }
+        var krill = FoodNode(depthLevel: depthLevel)
+//        var foodNum = (arc4random() % 100)
+//        var newTexture = SKTexture(imageNamed: "fish.jpg")
         krill.frame.width
         krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
         krill.physicsBody?.affectedByGravity = false
         krill.physicsBody?.categoryBitMask = UInt32(krillCategory)
         krill.physicsBody?.contactTestBitMask = UInt32(whaleCategory)
         krill.physicsBody?.collisionBitMask = 0
-        krill.name = "food"
+//        krill.name = "food"
         
         krill.startPoint = self.spawnManager.randomSpawnPoint()
         
@@ -251,7 +287,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //ensures krill removed from taking up memory:
         var actions = SKAction.sequence([moveAction,removeAction])
         krill.runAction(actions)
-        self.addChild(krill)
+        self.ocean.addChild(krill)
         println("startpt: \(krill.position)")
         println("endpt: \(endPoint)")
     }
@@ -299,22 +335,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.view?.paused = true
         }
     }
+    func pauseAfterDelay() {
+        var timer1 = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: Selector("pauseGame"), userInfo: nil, repeats: false)
+        print()
+        timer1.fire()
+    }
+    func pauseGame() {
+        self.view?.paused = true
+        print()
+    }
     
     override func update(currentTime: CFTimeInterval) {
-        self.deltaTime = currentTime - self.previousTime
-        self.previousTime = currentTime
-        self.timeSinceLastFood += self.deltaTime
-        self.scoreLabel.text = "\(self.currentScore)"
-        if self.timeSinceLastFood > self.nextFoodTime {
+        
+//        self.deltaTime = currentTime - self.previousTime
+//        self.previousTime = currentTime
+//        self.timeSinceLastFood += self.deltaTime
+        
+        //init(spawnArea : CGRect, depthLevel : Int, frequency : Double, theOcean : SKSpriteNode)
+//        if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
-            self.spawnKrill()
+//            self.spawnKrill()
             //generate random nextFood time:
-            println("previous food time: \(self.nextFoodTime)")
-            self.nextFoodTime = Double(arc4random() % 2000) / 1000
-            println("new food time: \(self.nextFoodTime)")
-            self.timeSinceLastFood = 0
-            print()
-        }
+//            println("previous food time: \(self.nextFoodTime)")
+//            self.nextFoodTime = Double(arc4random() % 2000) / 1000
+//            println("new food time: \(self.nextFoodTime)")
+//            self.timeSinceLastFood = 0
+//            print()
+        //}
         
         /* Called before each frame is rendered */
    
@@ -324,6 +371,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //            //set background to blue
         //            self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
 
+        //SET SCORE
+        self.scoreLabel.text = "\(self.currentScore)"
+        
+        //Spawn Controllers
+        
+        for spawner in self.spawnControllers {
+            spawner.update(currentTime)
+        }
+        
+        //Calculate angle of whale to properly move ocean
         var newValue = self.translate(self.currentYDirection)
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
         self.whale.zRotation = newRadian
@@ -456,19 +513,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 var actions = SKAction.sequence([mover, removeMoverAction])
                 foodNode.runAction(actions)
+                
             }
         })
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
         println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
-        if contact.bodyA.node?.name == "food" {
-            contact.bodyA.node?.removeFromParent()
-            self.currentScore++
-        }
-        if contact.bodyB.node?.name == "food" {
-            contact.bodyB.node?.removeFromParent()
-            self.currentScore++
+        var bodies = [contact.bodyA,contact.bodyB]
+        for eachBody in bodies {
+            if let foodNode = eachBody.node as? FoodNode {
+                var foodName = foodNode.imageName
+                if foodName == "krill" {
+                    foodNode.removeFromParent()
+                    self.currentScore += 0
+                }
+                else if foodName == "fishsmall_01" || foodName == "fishsmall_02" || foodName == "fishsmall_03" {
+                    eachBody.node?.removeFromParent()
+                    self.currentScore += 1
+                }
+                else if foodName == "fishmed_01" || foodName == "fishmed_02" || foodName == "fishmed_03" {
+                    eachBody.node?.removeFromParent()
+                    self.currentScore += 5
+                }
+                else if foodName == "fishlarge_01" || foodName == "fishlarge_02" || foodName == "fishlarge_03" {
+                    eachBody.node? .removeFromParent()
+                    self.currentScore += 10
+                }
+            }
         }
         print()
     }
