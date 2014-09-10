@@ -45,6 +45,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
+        var area1 = CGRect()
+        if let theView = self.view?.frame.width {
+            area1 = CGRect(x: theView + 20, y: 1334, width: 600, height: 666)
+        }
+        var spawnController1 = SpawnController(spawnArea: area1, depthLevel: 1, frequency: 1.0, theOcean: self.ocean)
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -110,8 +115,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
             //self.scoreLabel.text = "\(self.currentScore)"
             self.addChild(self.scoreLabel)
-            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: theScene.frame.height - 70)
-            self.pauseButton.size = CGSize(width: self.scoreLabel.frame.width / 4, height: self.scoreLabel.frame.height)
+            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: 48)
+            self.pauseButton.size = CGSize(width: 25, height: 25)
             self.addChild(self.pauseButton)
             
         // Score bar
@@ -225,14 +230,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func spawnKrill() {
         self.spawnManager = SpawnManager(screenFrame: self.frame)
-        var krill = FoodNode(imageNamed: "krill")
+        //check current depth
+        var depthLevel = 1
+        if self.currentDepth < 600 {
+            depthLevel = 1
+        }
+        else if self.currentDepth < 1200 {
+            depthLevel = 2
+        }
+        else {
+            depthLevel = 3
+        }
+        var krill = FoodNode(depthLevel: depthLevel)
+//        var foodNum = (arc4random() % 100)
+//        var newTexture = SKTexture(imageNamed: "fish.jpg")
         krill.frame.width
         krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
         krill.physicsBody?.affectedByGravity = false
         krill.physicsBody?.categoryBitMask = UInt32(krillCategory)
         krill.physicsBody?.contactTestBitMask = UInt32(whaleCategory)
         krill.physicsBody?.collisionBitMask = 0
-        krill.name = "food"
+//        krill.name = "food"
         
         krill.startPoint = self.spawnManager.randomSpawnPoint()
         
@@ -251,7 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //ensures krill removed from taking up memory:
         var actions = SKAction.sequence([moveAction,removeAction])
         krill.runAction(actions)
-        self.addChild(krill)
+        self.ocean.addChild(krill)
         println("startpt: \(krill.position)")
         println("endpt: \(endPoint)")
     }
@@ -299,12 +317,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.view?.paused = true
         }
     }
+    func pauseAfterDelay() {
+        var timer1 = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: Selector("pauseGame"), userInfo: nil, repeats: false)
+        print()
+        timer1.fire()
+    }
+    func pauseGame() {
+        self.view?.paused = true
+        print()
+    }
     
     override func update(currentTime: CFTimeInterval) {
         self.deltaTime = currentTime - self.previousTime
         self.previousTime = currentTime
         self.timeSinceLastFood += self.deltaTime
         self.scoreLabel.text = "\(self.currentScore)"
+        
+        //init(spawnArea : CGRect, depthLevel : Int, frequency : Double, theOcean : SKSpriteNode)
         if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
             self.spawnKrill()
