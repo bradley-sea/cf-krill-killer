@@ -75,7 +75,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        self.setupWaves()
         
         //add whale
-        self.whale.position = CGPoint(x: 35, y: 150)
+        self.whale.position = CGPoint(x: 35, y: self.middleXPosition)
         self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
         self.whale.physicsBody?.affectedByGravity = false
         self.whale.name = "whale"
@@ -86,12 +86,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.whale)
         
         //add krill
-        self.krill.position = CGPoint(x: self.size.width + -50, y: 150)
-        
-        self.addChild(self.krill)
-        
-        var mover = SKAction.moveToX(-100, duration: 10.0)
-        self.krill.runAction(mover)
+//        self.krill.position = CGPoint(x: self.size.width + -50, y: 150)
+//        
+//        self.addChild(self.krill)
+//        
+//        var mover = SKAction.moveToX(-100, duration: 10.0)
+//        self.krill.runAction(mover)
         
         
         //set background to blue
@@ -290,9 +290,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.previousTime = currentTime
         self.timeSinceLastFood += self.deltaTime
         self.scoreLabel.text = "Score: \(self.currentScore)"
-        if currentDepth < 1 {
-            oxygen = 100
-        }
         if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
             self.spawnKrill()
@@ -411,6 +408,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //method used to take a our current motion value and translate it to degrees between -45 and 45
     func translate(value : Double) -> Double {
         
+        var leftSpan = -0.7 - (0.7)
+        var rightSpan = 45.0 - (-45.0)
         
         //convert left range into a 0-1 range 
         var valueScale = (value - 0.7) / leftSpan
@@ -478,6 +477,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func updateHealthBar() {
         oxygen -= 0.1
+        
+        if currentDepth < 1 {
+            if oxygen < 100 {
+                oxygen += 5
+            }
+        }
         
         if oxygen > 0 {
             healthBar.size.width = CGFloat((healthBarWidth / 100)) * CGFloat(oxygen)
