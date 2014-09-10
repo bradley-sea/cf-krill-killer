@@ -45,6 +45,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
+        var area1 = CGRect()
+        if let theView = self.view?.frame.width {
+            area1 = CGRect(x: theView + 20, y: 1334, width: 600, height: 666)
+        }
+        var spawnController1 = SpawnController(spawnArea: area1, depthLevel: 1, frequency: 1.0, theOcean: self.ocean)
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -264,7 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //ensures krill removed from taking up memory:
         var actions = SKAction.sequence([moveAction,removeAction])
         krill.runAction(actions)
-        self.addChild(krill)
+        self.ocean.addChild(krill)
         println("startpt: \(krill.position)")
         println("endpt: \(endPoint)")
     }
@@ -327,6 +332,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.previousTime = currentTime
         self.timeSinceLastFood += self.deltaTime
         self.scoreLabel.text = "\(self.currentScore)"
+        
+        //init(spawnArea : CGRect, depthLevel : Int, frequency : Double, theOcean : SKSpriteNode)
         if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
             self.spawnKrill()
