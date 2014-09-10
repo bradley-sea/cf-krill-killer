@@ -10,12 +10,12 @@ import UIKit
 import SpriteKit
 
 class SpawnController {
+    
     let spawnArea : CGRect
     var frequency : Double
     var ocean : SKNode
     var deltaTime = 0.0
     var timeSinceLastSpawn = 0.0
-    var nextFoodTime = 0.0
     var previousTime = 0.0
     var foodYDelta = 0.0
     
@@ -25,18 +25,34 @@ class SpawnController {
         self.ocean = theOcean
     }
     func update(currentTime: CFTimeInterval) {
+        
+        //grab delta time
         self.deltaTime = currentTime - self.previousTime
         self.previousTime = currentTime
         self.timeSinceLastSpawn += self.deltaTime
         
-        if self.timeSinceLastSpawn > self.nextFoodTime {
+        //see if enough time has passed to spawn food
+        if self.timeSinceLastSpawn > self.frequency {
             self.spawnFood()
-            self.nextFoodTime = Double(arc4random() % 2000) / 1000
             self.timeSinceLastSpawn = 0
-            print()
         }
     }
     func spawnFood() {
         
+        var krill = SKSpriteNode(imageNamed: "krill")
+        
+        var xCoord = CGFloat(arc4random() % UInt32(spawnArea.width) + UInt32(spawnArea.origin.x))
+        var yCoord = CGFloat(arc4random() % UInt32(spawnArea.height) + UInt32(spawnArea.origin.y))
+        
+        //for now get middle of spawn area
+        var midX = xCoord
+        var midY = yCoord
+        
+        krill.position = CGPoint(x: midX, y: midY)
+        
+        self.ocean.addChild(krill)
+        
+        var mover = SKAction.moveTo(CGPoint(x: krill.position.x - 800, y: krill.position.y - 100), duration: 2.0)
+        krill.runAction(mover)
     }
 }

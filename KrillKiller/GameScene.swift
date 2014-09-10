@@ -11,9 +11,7 @@ import CoreMotion
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    var mManager = CMMotionManager()
     var whale = WhaleNode(imageNamed: "orca_01.png")
-    var currentYDirection : Double = 0.0
     var currentDepth = 50.0
     var depthLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
@@ -43,13 +41,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var ocean : SKSpriteNode!
     var middleXPosition : Int!
     
+    //motion properties
+    var mManager = CMMotionManager()
+    var currentYDirection : Double = 0.0
+    
+    //spawn controllers
+    var spawnControllers = [SpawnController]()
+    
+    
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
-        var area1 = CGRect()
-        if let theView = self.view?.frame.width {
-            area1 = CGRect(x: theView + 20, y: 1334, width: 600, height: 666)
-        }
-        var spawnController1 = SpawnController(spawnArea: area1, depthLevel: 1, frequency: 1.0, theOcean: self.ocean)
+        
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -151,9 +153,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
  
         self.setupMotionDetection()
+        
+        self.setupSpawnControllers()
 
     }
     
+    func setupSpawnControllers() {
+        
+        var area1 = CGRect(x: self.view!.frame.width + 20, y: 1334, width: 200, height: 666)
+        var spawnController1 = SpawnController(spawnArea: area1, depthLevel: 1, frequency: 1.0, theOcean: self.ocean)
+        self.spawnControllers.append(spawnController1)
+        
+    }
     
     
     func setupOcean() {
@@ -328,22 +339,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(currentTime: CFTimeInterval) {
-        self.deltaTime = currentTime - self.previousTime
-        self.previousTime = currentTime
-        self.timeSinceLastFood += self.deltaTime
-        self.scoreLabel.text = "\(self.currentScore)"
+        
+//        self.deltaTime = currentTime - self.previousTime
+//        self.previousTime = currentTime
+//        self.timeSinceLastFood += self.deltaTime
         
         //init(spawnArea : CGRect, depthLevel : Int, frequency : Double, theOcean : SKSpriteNode)
-        if self.timeSinceLastFood > self.nextFoodTime {
+//        if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
-            self.spawnKrill()
+//            self.spawnKrill()
             //generate random nextFood time:
-            println("previous food time: \(self.nextFoodTime)")
-            self.nextFoodTime = Double(arc4random() % 2000) / 1000
-            println("new food time: \(self.nextFoodTime)")
-            self.timeSinceLastFood = 0
-            print()
-        }
+//            println("previous food time: \(self.nextFoodTime)")
+//            self.nextFoodTime = Double(arc4random() % 2000) / 1000
+//            println("new food time: \(self.nextFoodTime)")
+//            self.timeSinceLastFood = 0
+//            print()
+        //}
         
         /* Called before each frame is rendered */
    
@@ -353,6 +364,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //            //set background to blue
         //            self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
 
+        //SET SCORE
+        self.scoreLabel.text = "\(self.currentScore)"
+        
+        //Spawn Controllers
+        
+        for spawner in self.spawnControllers {
+            spawner.update(currentTime)
+        }
+        
+        //Calculate angle of whale to properly move ocean
         var newValue = self.translate(self.currentYDirection)
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
         self.whale.zRotation = newRadian
@@ -485,6 +506,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 var actions = SKAction.sequence([mover, removeMoverAction])
                 foodNode.runAction(actions)
+                
             }
         })
     }
