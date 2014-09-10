@@ -248,6 +248,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
     }
+    func pauseAfterDelay() {
+        var timer1 = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: Selector("pauseGame"), userInfo: nil, repeats: false)
+        print()
+        timer1.fire()
+    }
+    func pauseGame() {
+        self.view?.paused = true
+        print()
+    }
     
     override func update(currentTime: CFTimeInterval) {
         self.deltaTime = currentTime - self.previousTime
