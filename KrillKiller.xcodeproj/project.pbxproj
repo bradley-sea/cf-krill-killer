@@ -103,7 +103,6 @@
 				F27CA10719BF9CC5005E5653 /* WhaleNode.swift */,
 				F27CA10519BF6777005E5653 /* FoodNode.swift */,
 				A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */,
-				A2BF1E3619BE271300BAD4C0 /* newWhale.png */,
 				A2BF1E3119BE0E9100BAD4C0 /* krill.png */,
 				6D06B09B19BFA8BB0012DC6F /* pause.jpg */,
 				6D06B09D19BFAA580012DC6F /* play.jpg */,
@@ -220,7 +219,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2BF1E3719BE271300BAD4C0 /* newWhale.png in Resources */,
 				A2BF1E1B19BE0E7F00BAD4C0 /* Images.xcassets in Resources */,
 				A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */,
 				6D06B09C19BFA8BB0012DC6F /* pause.jpg in Resources */,

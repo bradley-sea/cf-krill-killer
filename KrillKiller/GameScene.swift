@@ -85,6 +85,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.whale.physicsBody?.collisionBitMask = 0
         self.addChild(self.whale)
         
+        //add krill
+        self.krill.position = CGPoint(x: self.size.width + -50, y: 150)
+        
+        self.addChild(self.krill)
+        
+        var mover = SKAction.moveToX(-100, duration: 10.0)
+        self.krill.runAction(mover)
+        
+        
         //set background to blue
         self.backgroundColor = UIColor.grayColor()
         
@@ -236,9 +245,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.mManager.accelerometerUpdateInterval = 0.05
         self.mManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue()) { (accelerometerData : CMAccelerometerData!, error) in
             
-            //keeping track of the devices orientation in relation to our gameplay. we will use this property in our update loop to figure out which way the wale should be pointing
-            
             self.currentYDirection = accelerometerData.acceleration.y
+            
+            println(accelerometerData.acceleration.y)
+            
         }
     }
     
@@ -401,8 +411,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //method used to take a our current motion value and translate it to degrees between -45 and 45
     func translate(value : Double) -> Double {
         
-        var leftSpan = -0.7 - (0.7) //1.4
-        var rightSpan = 45.0 - (-45.0) // 90
         
         //convert left range into a 0-1 range 
         var valueScale = (value - 0.7) / leftSpan
