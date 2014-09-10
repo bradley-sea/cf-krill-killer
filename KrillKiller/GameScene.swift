@@ -12,7 +12,7 @@ import CoreMotion
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var mManager = CMMotionManager()
-    var whale = WhaleNode(imageNamed: "newWhale")
+    var whale = WhaleNode(imageNamed: "orca_01.png")
     var currentYDirection : Double = 0.0
     var currentDepth = 100.0
     var depthLabel = SKLabelNode()
@@ -45,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.setupOcean()
 
         // Sky background
-        var skyBG = SKSpriteNode(imageNamed: "sky.png")
+        var skyBG = SKSpriteNode(imageNamed: "sky_01.png")
         skyBG.position = CGPointMake(284, 290)
         self.addChild(skyBG)
         
@@ -56,7 +56,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.setupWaves()
         
         //add whale
-        self.whale.position = CGPoint(x: 35, y: 150)
+        self.whale.position = CGPoint(x: 74, y: 160)
         self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
         self.whale.physicsBody?.affectedByGravity = false
         self.whale.name = "whale"
@@ -67,19 +67,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.whale)
         
         //set background to blue
-        self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.3)
+//        self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: 0.3)
         
         //adding label to keep track of the current depth
-        self.depthLabel.position = CGPoint(x: 500, y: 20)
+        self.depthLabel.position = CGPoint(x: 280, y: 10)
         self.depthLabel.text = "\(self.currentDepth)"
         self.addChild(self.depthLabel)
         if let theScene = self.scene {
-            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
-            self.scoreLabel.text = "Score: \(self.currentScore)"
+//            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
+            self.scoreLabel.position = CGPoint(x: 30, y: 18)
+            self.scoreLabel.fontName = "Copperplate"
+            self.scoreLabel.fontSize = 20
+            self.scoreLabel.fontColor = UIColor(red: 128.0/255.0, green: 179.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+            self.scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
+            //self.scoreLabel.text = "\(self.currentScore)"
             self.addChild(self.scoreLabel)
             self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: theScene.frame.height - 70)
             self.pauseButton.size = CGSize(width: self.scoreLabel.frame.width / 4, height: self.scoreLabel.frame.height)
             self.addChild(self.pauseButton)
+            
+        // Score bar
+        var scoreBar = SKSpriteNode(imageNamed: "scorebar_01.png")
+        scoreBar.position = CGPointMake(45, 24)
+        self.addChild(scoreBar)
+        
+        // Lifemeter bar
+        var lifeMeterBar = SKSpriteNode(imageNamed: "lifemeterbar_01.png")
+        lifeMeterBar.position = CGPointMake(theScene.frame.width - 46, 24)
+        self.addChild(lifeMeterBar)
+            
         }
         else {
             //crash it:
@@ -96,7 +112,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             var newI = CGFloat(i)
 
-            var oceanBG = SKSpriteNode(imageNamed: "ocean.png")
+            var oceanBG = SKSpriteNode(imageNamed: "ocean_01.png")
             oceanBG.anchorPoint = CGPointZero
             oceanBG.position = CGPointMake(newI * oceanBG.size.width, -720)
             oceanBG.name = "ocean"
@@ -110,19 +126,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             var newI = CGFloat(i)
 
-            var wave3BG = SKSpriteNode(imageNamed: "wave3.png")
+            var wave3BG = SKSpriteNode(imageNamed: "wave_03.png")
             wave3BG.anchorPoint = CGPointZero
             wave3BG.position = CGPointMake(newI * wave3BG.size.width, 250)
             wave3BG.name = "wave3"
             self.addChild(wave3BG)
 
-            var wave2BG = SKSpriteNode(imageNamed: "wave2.png")
+            var wave2BG = SKSpriteNode(imageNamed: "wave_02.png")
             wave2BG.anchorPoint = CGPointZero
             wave2BG.position = CGPointMake(-newI * wave2BG.size.width, 244)
             wave2BG.name = "wave2"
             self.addChild(wave2BG)
 
-            var wave1BG = SKSpriteNode(imageNamed: "wave1.png")
+            var wave1BG = SKSpriteNode(imageNamed: "wave_01.png")
             wave1BG.anchorPoint = CGPointZero
             wave1BG.position = CGPointMake(newI * wave1BG.size.width, 239)
             wave1BG.name = "wave1"
@@ -136,25 +152,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             var newI = CGFloat(i)
 
-            var cloud1BG = SKSpriteNode(imageNamed: "cloud1.png")
+            var cloud1BG = SKSpriteNode(imageNamed: "cloud_01.png")
             cloud1BG.anchorPoint = CGPointZero
             cloud1BG.position = CGPointMake(newI * cloud1BG.size.width - 100, 290) //3rd
             cloud1BG.name = "cloud1"
             self.addChild(cloud1BG)
  
-            var cloud2BG = SKSpriteNode(imageNamed: "cloud2.png")
+            var cloud2BG = SKSpriteNode(imageNamed: "cloud_02.png")
             cloud2BG.anchorPoint = CGPointZero
             cloud2BG.position = CGPointMake(newI * cloud2BG.size.width - 60, 300) //1st
             cloud2BG.name = "cloud2"
             self.addChild(cloud2BG)
  
-            var cloud3BG = SKSpriteNode(imageNamed: "cloud3.png")
+            var cloud3BG = SKSpriteNode(imageNamed: "cloud_03.png")
             cloud3BG.anchorPoint = CGPointZero
             cloud3BG.position = CGPointMake(newI * cloud3BG.size.width - 60, 293) //2nd
             cloud3BG.name = "cloud3"
             self.addChild(cloud3BG)
             
-            var cloud4BG = SKSpriteNode(imageNamed: "cloud4.png")
+            var cloud4BG = SKSpriteNode(imageNamed: "cloud_04.png")
             cloud4BG.anchorPoint = CGPointZero
             cloud4BG.position = CGPointMake(newI * cloud4BG.size.width - 60, 299)
             cloud4BG.name = "cloud4"
@@ -212,7 +228,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             //keeping track of the devices orientation in relation to our gameplay. we will use this property in our update loop to figure out which way the wale should be pointing
             
-            self.currentYDirection = accelerometerData.acceleration.y
+            self.currentYDirection = accelerometerData.acceleration.y // CHECK: screen rotation changes whale rotation
         }
     }
     
@@ -245,7 +261,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //pause it. set image to play.
             
             self.view?.paused = true
-            
         }
     }
     func pauseAfterDelay() {
@@ -262,7 +277,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.deltaTime = currentTime - self.previousTime
         self.previousTime = currentTime
         self.timeSinceLastFood += self.deltaTime
-        self.scoreLabel.text = "Score: \(self.currentScore)"
+        self.scoreLabel.text = "\(self.currentScore)"
         if self.timeSinceLastFood > self.nextFoodTime {
             //spawn some food:
             self.spawnKrill()
@@ -273,7 +288,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.timeSinceLastFood = 0
             print()
         }
-        
         
         /* Called before each frame is rendered */
    
@@ -474,8 +488,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 foodNode.runAction(actions)
             }
         })
-        
-        
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
