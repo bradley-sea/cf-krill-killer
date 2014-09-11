@@ -23,6 +23,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var nextFoodTime = 0.0
     var previousTime = 0.0
     var foodYDelta = 0.0
+    var timeOfLastMeal = 0.0
+    var currentTime = 0.0
     
     //categories:
     let whaleCategory = 0x1 << 0
@@ -300,7 +302,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(currentTime: CFTimeInterval) {
-
+        self.currentTime = currentTime
+        var timeSinceEating = self.currentTime - self.timeOfLastMeal
+        if timeSinceEating < 0.5 {
+            self.whale.texture = SKTexture(imageNamed: "orca_02")
+        }
+        else {
+            self.whale.texture = SKTexture(imageNamed: "orca_01")
+        }
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
         
@@ -438,6 +447,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //                    eachBody.node? .removeFromParent()
                     self.currentScore += 10
                 }
+                self.timeOfLastMeal = self.currentTime
                 eachBody.node?.removeFromParent()
                 self.soundPlayManager.playEatSound(contact.bodyA.node!)
             }
