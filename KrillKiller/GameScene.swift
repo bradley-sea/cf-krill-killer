@@ -18,8 +18,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreLabel = SKLabelNode()
     var pauseButton = SKSpriteNode(imageNamed: "pause.jpg")
     var currentScore = 0
-    var spawnManager : SpawnManager!
-    var skAction = SKAction()
     var deltaTime = 0.0
     var timeSinceLastFood = 0.0
     var nextFoodTime = 0.0
@@ -63,8 +61,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //crash it:
             assert(1 == 2)
         }
-        
-        self.ocean = SKSpriteNode(color: UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5), size: CGSize(width: 600, height: oceanDepth))
+        var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
+        var oceanWidth = CGFloat(self.view!.frame.width + 100)
+        self.ocean = SKSpriteNode(color: color, size: CGSize(width: oceanWidth, height: CGFloat(oceanDepth)))
         middleXPosition = Int(scene!.size.height / 2)
         
         // Ocean background
@@ -85,25 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Wave background
 //        self.setupWaves()
         
-        //add whale
-        self.whale.position = CGPoint(x: 35, y: self.middleXPosition)
-        self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
-        self.whale.physicsBody?.affectedByGravity = false
-        self.whale.name = "whale"
-//        self.whale.physicsBody?.contactTestBitMask = 1
-        self.whale.physicsBody?.categoryBitMask = UInt32(whaleCategory)
-        self.whale.physicsBody?.contactTestBitMask = UInt32(krillCategory)
-        self.whale.physicsBody?.collisionBitMask = 0
-        self.addChild(self.whale)
-        
-        //add krill
-//        self.krill.position = CGPoint(x: self.size.width + -50, y: 150)
-//        
-//        self.addChild(self.krill)
-//        
-//        var mover = SKAction.moveToX(-100, duration: 10.0)
-//        self.krill.runAction(mover)
-        
+        self.setupWhale()
         
         //set background to blue
         self.backgroundColor = UIColor.grayColor()
@@ -176,6 +157,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var area3 = CGRect(x: self.view!.frame.width + 20, y: 0, width: 200, height: 666)
         var spawnController3 = SpawnController(spawnArea: area3, depthLevel: 3, frequency: 2.0, theOcean: self.ocean)
         self.spawnControllers.append(spawnController3)
+    }
+    
+    func setupWhale() {
+        self.whale.position = CGPoint(x: 35, y: self.middleXPosition)
+        self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
+        self.whale.physicsBody?.affectedByGravity = false
+        self.whale.name = "whale"
+        //        self.whale.physicsBody?.contactTestBitMask = 1
+        self.whale.physicsBody?.categoryBitMask = UInt32(whaleCategory)
+        self.whale.physicsBody?.contactTestBitMask = UInt32(krillCategory)
+        self.whale.physicsBody?.collisionBitMask = 0
+        self.addChild(self.whale)
     }
     
     
@@ -251,51 +244,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func spawnKrill() {
-        self.spawnManager = SpawnManager(screenFrame: self.frame)
-        //check current depth
-        var depthLevel = 1
-        if self.currentDepth < 600 {
-            depthLevel = 1
-        }
-        else if self.currentDepth < 1200 {
-            depthLevel = 2
-        }
-        else {
-            depthLevel = 3
-        }
-        var krill = FoodNode(depthLevel: depthLevel)
-//        var foodNum = (arc4random() % 100)
-//        var newTexture = SKTexture(imageNamed: "fish.jpg")
-        krill.frame.width
-        krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
-        krill.physicsBody?.affectedByGravity = false
-        krill.physicsBody?.categoryBitMask = UInt32(krillCategory)
-        krill.physicsBody?.contactTestBitMask = UInt32(whaleCategory)
-        krill.physicsBody?.collisionBitMask = 0
-//        krill.name = "food"
-        
-        krill.startPoint = self.spawnManager.randomSpawnPoint()
-        
-        krill.position = krill.startPoint!
-        
-        var endPoint = self.spawnManager.randomEndPoint()
-        krill.endPoint = endPoint
-        
-        
-//        var duration = (arc4random() % 10) + 5
-//        var moveAction = SKAction.moveTo(endPt, duration: NSTimeInterval(duration))
-        var moveAction = SKAction.moveTo(endPoint, duration: 2)
-        var removeAction = SKAction.runBlock { () -> Void in
-        krill.removeFromParent()
-        }
-        //ensures krill removed from taking up memory:
-        var actions = SKAction.sequence([moveAction,removeAction])
-        krill.runAction(actions)
-        self.ocean.addChild(krill)
-        println("startpt: \(krill.position)")
-        println("endpt: \(endPoint)")
-    }
     
     func setupMotionDetection() {
         
@@ -351,30 +299,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(currentTime: CFTimeInterval) {
-        
-//        self.deltaTime = currentTime - self.previousTime
-//        self.previousTime = currentTime
-//        self.timeSinceLastFood += self.deltaTime
-        
-        //init(spawnArea : CGRect, depthLevel : Int, frequency : Double, theOcean : SKSpriteNode)
-//        if self.timeSinceLastFood > self.nextFoodTime {
-            //spawn some food:
-//            self.spawnKrill()
-            //generate random nextFood time:
-//            println("previous food time: \(self.nextFoodTime)")
-//            self.nextFoodTime = Double(arc4random() % 2000) / 1000
-//            println("new food time: \(self.nextFoodTime)")
-//            self.timeSinceLastFood = 0
-//            print()
-        //}
-        
-        /* Called before each frame is rendered */
-   
-        // sample of changing the background color as we go deeper
-        //var alpha = CGColorGetAlpha(self.backgroundColor.CGColor)
-        //            alpha = alpha + 0.002
-        //            //set background to blue
-        //            self.backgroundColor = UIColor(red: 51.0/255.0, green: 153.0/255.0, blue: 255.0/255.0, alpha: alpha)
 
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
@@ -390,16 +314,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
         self.whale.zRotation = newRadian
         self.updateDepth(newValue)
-        
-        //get whale's angle.
-        //for eachObject:
-        //move its currentposition (y-coordinate) oppositely.
-//        self.enumerateChildNodesWithName("food", usingBlock: { (child, stop) -> Void in
-//            //check what angle
-//            var getAngle = self.whale.zRotation
-//            var curPos = child.position
-//            child.position = CGPointMake(child.position.x, child.position.y + 10)
-//        })
         
         // Artwork
         // eumerate through wave1
@@ -501,28 +415,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
     }
     
-    func applyNewAngle() {
-        
-        var index = self.indexForAngle()
-        
-        self.enumerateChildNodesWithName("food", usingBlock: { (node, stop) -> Void in
-            if let foodNode = node as? FoodNode {
-                var endPoint = foodNode.endPoints[index]
-                
-                foodNode.removeAllActions()
-                
-                var mover = SKAction.moveTo(endPoint, duration: 2)
-                var removeMoverAction = SKAction.runBlock({ () -> Void in
-                    foodNode.removeFromParent()
-                })
-                
-                var actions = SKAction.sequence([mover, removeMoverAction])
-                foodNode.runAction(actions)
-                
-            }
-        })
-    }
-    
     func didBeginContact(contact: SKPhysicsContact) {
         println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
         var bodies = [contact.bodyA,contact.bodyB]
@@ -557,20 +449,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         print()
-    }
-    
-    func indexForAngle() -> Int {
- 
-        var index = 0
-
-        switch self.whale.angle {
-        case .Zero : index = 0
-        case .SharpDown : index = 1
-        case .SlightDown : index = 2
-        case .SharpUp : index = 3
-        case .SlightUp : index = 4
-        }
-        return index
     }
     
     func updateHealthBar() {
