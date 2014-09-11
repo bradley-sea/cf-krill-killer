@@ -49,6 +49,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // audio
     var backgroundAudioPlayer = AVAudioPlayer()
+    var soundPlayManager = SoundPlayManager()
     
     
     override func didMoveToView(view: SKView) {
@@ -422,29 +423,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if let foodNode = eachBody.node as? FoodNode {
                 var foodName = foodNode.imageName
                 if foodName == "krill" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_01.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
                     foodNode.removeFromParent()
                     self.currentScore += 0
                 }
                 else if foodName == "fishsmall_01" || foodName == "fishsmall_02" || foodName == "fishsmall_03" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
 //                    eachBody.node?.removeFromParent()
                     self.currentScore += 1
                 }
                 else if foodName == "fishmed_01" || foodName == "fishmed_03" || foodName == "fishmed_03" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
 //                    eachBody.node?.removeFromParent()
                     self.currentScore += 5
                 }
                 else if foodName == "fishlarge_01" || foodName == "fishlarge_04" || foodName == "fishlarge_03" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
 //                    eachBody.node? .removeFromParent()
                     self.currentScore += 10
                 }
+                self.soundPlayManager.playEatSound(contact.bodyA.node!)
                 eachBody.node?.removeFromParent()
             }
         }
