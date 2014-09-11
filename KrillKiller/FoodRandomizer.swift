@@ -15,7 +15,7 @@ class FoodRandomizer {
         
     }
     
-    func spawnRandom(depthLevel : Int) -> (String, String) {
+    func spawnRandomFood(depthLevel : Int) -> (String, String) {
         var name = "krill"
         var imageName = "krill"
         var foodNum = (arc4random() % 4)
@@ -73,6 +73,27 @@ class FoodRandomizer {
                 print()
             }
         }
+        return (name, imageName)
+    }
+    
+    func spawnRandomPowerup(depthLevel : Int) -> (String, String) {
+        var name = "powerup"
+        var imageName = "bubble"
+        var powerupType = (arc4random() % 3) + 1
+        if powerupType == 1 {
+            //then it's a bubble:
+            var bubbleType = (arc4random() % 3) + 1
+            imageName = "bubble_0\(bubbleType)"
+        }
+        else if powerupType == 2 {
+            //then it's a diver.
+            var diverType = (arc4random() % 3) + 1
+            imageName = "diver_0\(diverType)"
+        }
+        else {
+            imageName = "mermaid"
+        }
+        name = "powerup"
         return (name, imageName)
     }
 }

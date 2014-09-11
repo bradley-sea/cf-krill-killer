@@ -25,7 +25,6 @@ class FoodNode: SKSpriteNode {
     
     var score : Int = 0
     
-    var endPoint : CGPoint?
     var startPoint : CGPoint?
     
     var driftLowNearPoint : CGPoint?
@@ -34,7 +33,6 @@ class FoodNode: SKSpriteNode {
     var driftHighFarPoint : CGPoint?
     var foodType : Food!
     
-    var endPoints = [CGPoint]()
     var imageName : String!
     
     init(depthLevel : Int) {
@@ -43,7 +41,7 @@ class FoodNode: SKSpriteNode {
         var name = "krill"
         var imageName = "krill"
         var foodRandomizer = FoodRandomizer()
-        (name, imageName) = foodRandomizer.spawnRandom(depthLevel)
+        (name, imageName) = foodRandomizer.spawnRandomFood(depthLevel)
         
         texture = SKTexture(imageNamed: imageName)
         super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
@@ -53,10 +51,6 @@ class FoodNode: SKSpriteNode {
     required init(coder aDecoder: NSCoder) {
         
         super.init(coder: aDecoder)
-    }
-
-    func fillPointsArray() {
-        self.endPoints = [self.endPoint!, self.driftLowNearPoint!, self.driftLowFarPoint!, self.driftHighNearPoint!, self.driftHighFarPoint!]
     }
     
 }

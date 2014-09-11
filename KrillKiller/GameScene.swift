@@ -438,7 +438,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //                    eachBody.node? .removeFromParent()
                     self.currentScore += 10
                 }
+                eachBody.node?.removeFromParent()
                 self.soundPlayManager.playEatSound(contact.bodyA.node!)
+            }
+            else if let powerupNode = eachBody.node as? PowerupNode {
+                var powerupName = powerupNode.imageName
+                if powerupName == "bubble_01" || powerupName == "bubble_02" || powerupName == "bubble_03" {
+                    self.oxygen += 20
+                }
+                else if powerupName == "diver_01" || powerupName == "diver_02" || powerupName == "diver_03" {
+                    self.oxygen = 100
+                }
                 eachBody.node?.removeFromParent()
             }
         }
