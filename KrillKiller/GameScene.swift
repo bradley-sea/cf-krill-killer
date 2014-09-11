@@ -270,6 +270,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.whale.physicsBody?.contactTestBitMask = UInt32(krillCategory)
         self.whale.physicsBody?.collisionBitMask = 0
         self.addChild(self.whale)
+
     }
     
     
