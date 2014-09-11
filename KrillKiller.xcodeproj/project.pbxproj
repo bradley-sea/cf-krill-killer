@@ -23,6 +23,26 @@
 		A2BF1E3319BE0E9100BAD4C0 /* krill.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3119BE0E9100BAD4C0 /* krill.png */; };
 		F27CA10619BF6777005E5653 /* FoodNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27CA10519BF6777005E5653 /* FoodNode.swift */; };
 		F27CA10819BF9CC5005E5653 /* WhaleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27CA10719BF9CC5005E5653 /* WhaleNode.swift */; };
+		F2E5459C19C1697E0095C5ED /* whalebreach_01.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458819C169700095C5ED /* whalebreach_01.caf */; };
+		F2E5459D19C1697E0095C5ED /* whaleeat_01.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458919C169700095C5ED /* whaleeat_01.caf */; };
+		F2E5459E19C1697E0095C5ED /* whaleeat_02.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458A19C169700095C5ED /* whaleeat_02.caf */; };
+		F2E5459F19C1697E0095C5ED /* whaleeat_03.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458B19C169700095C5ED /* whaleeat_03.caf */; };
+		F2E545A019C1697E0095C5ED /* whaleeat_04.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458C19C169700095C5ED /* whaleeat_04.caf */; };
+		F2E545A119C1697E0095C5ED /* whaleeat_05.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458D19C169700095C5ED /* whaleeat_05.caf */; };
+		F2E545A219C1697E0095C5ED /* whaleeat_06.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458E19C169700095C5ED /* whaleeat_06.caf */; };
+		F2E545A319C1697E0095C5ED /* whaleeat_07.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5458F19C169700095C5ED /* whaleeat_07.caf */; };
+		F2E545A419C1697E0095C5ED /* whaleeat_08.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459019C169700095C5ED /* whaleeat_08.caf */; };
+		F2E545A519C1697E0095C5ED /* whaleeat_09.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459119C169700095C5ED /* whaleeat_09.caf */; };
+		F2E545A619C1697E0095C5ED /* whaleeat_10.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459219C169700095C5ED /* whaleeat_10.caf */; };
+		F2E545A719C1697E0095C5ED /* whaleenemy_01.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459319C169700095C5ED /* whaleenemy_01.caf */; };
+		F2E545A819C1697E0095C5ED /* whaleenemy_02.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459419C169700095C5ED /* whaleenemy_02.caf */; };
+		F2E545A919C1697E0095C5ED /* whaleenemy_03.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459519C169700095C5ED /* whaleenemy_03.caf */; };
+		F2E545AA19C1697E0095C5ED /* whaleidle_01.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459619C169700095C5ED /* whaleidle_01.caf */; };
+		F2E545AB19C1697E0095C5ED /* whaleidle_02.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459719C169700095C5ED /* whaleidle_02.caf */; };
+		F2E545AC19C1697E0095C5ED /* whaleidle_03.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459819C169700095C5ED /* whaleidle_03.caf */; };
+		F2E545AD19C1697E0095C5ED /* whalelowair_01.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459919C169700095C5ED /* whalelowair_01.caf */; };
+		F2E545AE19C1697E0095C5ED /* whaleoutofair_01.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459A19C169700095C5ED /* whaleoutofair_01.caf */; };
+		F2E545AF19C1697E0095C5ED /* whalesong.caf in Resources */ = {isa = PBXBuildFile; fileRef = F2E5459B19C169700095C5ED /* whalesong.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +76,26 @@
 		A2BF1E3119BE0E9100BAD4C0 /* krill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = krill.png; sourceTree = "<group>"; };
 		F27CA10519BF6777005E5653 /* FoodNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodNode.swift; sourceTree = "<group>"; };
 		F27CA10719BF9CC5005E5653 /* WhaleNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhaleNode.swift; sourceTree = "<group>"; };
+		F2E5458819C169700095C5ED /* whalebreach_01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whalebreach_01.caf; sourceTree = "<group>"; };
+		F2E5458919C169700095C5ED /* whaleeat_01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_01.caf; sourceTree = "<group>"; };
+		F2E5458A19C169700095C5ED /* whaleeat_02.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_02.caf; sourceTree = "<group>"; };
+		F2E5458B19C169700095C5ED /* whaleeat_03.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_03.caf; sourceTree = "<group>"; };
+		F2E5458C19C169700095C5ED /* whaleeat_04.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_04.caf; sourceTree = "<group>"; };
+		F2E5458D19C169700095C5ED /* whaleeat_05.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_05.caf; sourceTree = "<group>"; };
+		F2E5458E19C169700095C5ED /* whaleeat_06.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_06.caf; sourceTree = "<group>"; };
+		F2E5458F19C169700095C5ED /* whaleeat_07.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_07.caf; sourceTree = "<group>"; };
+		F2E5459019C169700095C5ED /* whaleeat_08.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_08.caf; sourceTree = "<group>"; };
+		F2E5459119C169700095C5ED /* whaleeat_09.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_09.caf; sourceTree = "<group>"; };
+		F2E5459219C169700095C5ED /* whaleeat_10.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleeat_10.caf; sourceTree = "<group>"; };
+		F2E5459319C169700095C5ED /* whaleenemy_01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleenemy_01.caf; sourceTree = "<group>"; };
+		F2E5459419C169700095C5ED /* whaleenemy_02.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleenemy_02.caf; sourceTree = "<group>"; };
+		F2E5459519C169700095C5ED /* whaleenemy_03.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleenemy_03.caf; sourceTree = "<group>"; };
+		F2E5459619C169700095C5ED /* whaleidle_01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleidle_01.caf; sourceTree = "<group>"; };
+		F2E5459719C169700095C5ED /* whaleidle_02.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleidle_02.caf; sourceTree = "<group>"; };
+		F2E5459819C169700095C5ED /* whaleidle_03.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleidle_03.caf; sourceTree = "<group>"; };
+		F2E5459919C169700095C5ED /* whalelowair_01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whalelowair_01.caf; sourceTree = "<group>"; };
+		F2E5459A19C169700095C5ED /* whaleoutofair_01.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whaleoutofair_01.caf; sourceTree = "<group>"; };
+		F2E5459B19C169700095C5ED /* whalesong.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = whalesong.caf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +152,7 @@
 				6D06B09D19BFAA580012DC6F /* play.jpg */,
 				A2BF1E1719BE0E7F00BAD4C0 /* Main.storyboard */,
 				A2BF1E1A19BE0E7F00BAD4C0 /* Images.xcassets */,
+				F2E5456E19C1543E0095C5ED /* audio */,
 				A2BF1E0D19BE0E7F00BAD4C0 /* Supporting Files */,
 			);
 			path = KrillKiller;
@@ -140,6 +181,33 @@
 				A2BF1E2519BE0E7F00BAD4C0 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F2E5456E19C1543E0095C5ED /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				F2E5458819C169700095C5ED /* whalebreach_01.caf */,
+				F2E5458919C169700095C5ED /* whaleeat_01.caf */,
+				F2E5458A19C169700095C5ED /* whaleeat_02.caf */,
+				F2E5458B19C169700095C5ED /* whaleeat_03.caf */,
+				F2E5458C19C169700095C5ED /* whaleeat_04.caf */,
+				F2E5458D19C169700095C5ED /* whaleeat_05.caf */,
+				F2E5458E19C169700095C5ED /* whaleeat_06.caf */,
+				F2E5458F19C169700095C5ED /* whaleeat_07.caf */,
+				F2E5459019C169700095C5ED /* whaleeat_08.caf */,
+				F2E5459119C169700095C5ED /* whaleeat_09.caf */,
+				F2E5459219C169700095C5ED /* whaleeat_10.caf */,
+				F2E5459319C169700095C5ED /* whaleenemy_01.caf */,
+				F2E5459419C169700095C5ED /* whaleenemy_02.caf */,
+				F2E5459519C169700095C5ED /* whaleenemy_03.caf */,
+				F2E5459619C169700095C5ED /* whaleidle_01.caf */,
+				F2E5459719C169700095C5ED /* whaleidle_02.caf */,
+				F2E5459819C169700095C5ED /* whaleidle_03.caf */,
+				F2E5459919C169700095C5ED /* whalelowair_01.caf */,
+				F2E5459A19C169700095C5ED /* whaleoutofair_01.caf */,
+				F2E5459B19C169700095C5ED /* whalesong.caf */,
+			);
+			name = audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,11 +259,11 @@
 				TargetAttributes = {
 					A2BF1E0919BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = L897SQDS85;
+						DevelopmentTeam = C65MMLEB3C;
 					};
 					A2BF1E1F19BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = L897SQDS85;
+						DevelopmentTeam = C65MMLEB3C;
 						TestTargetID = A2BF1E0919BE0E7F00BAD4C0;
 					};
 				};
@@ -224,6 +292,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2E5459C19C1697E0095C5ED /* whalebreach_01.caf in Resources */,
+				F2E5459D19C1697E0095C5ED /* whaleeat_01.caf in Resources */,
+				F2E5459E19C1697E0095C5ED /* whaleeat_02.caf in Resources */,
+				F2E5459F19C1697E0095C5ED /* whaleeat_03.caf in Resources */,
+				F2E545A019C1697E0095C5ED /* whaleeat_04.caf in Resources */,
+				F2E545A119C1697E0095C5ED /* whaleeat_05.caf in Resources */,
+				F2E545A219C1697E0095C5ED /* whaleeat_06.caf in Resources */,
+				F2E545A319C1697E0095C5ED /* whaleeat_07.caf in Resources */,
+				F2E545A419C1697E0095C5ED /* whaleeat_08.caf in Resources */,
+				F2E545A519C1697E0095C5ED /* whaleeat_09.caf in Resources */,
+				F2E545A619C1697E0095C5ED /* whaleeat_10.caf in Resources */,
+				F2E545A719C1697E0095C5ED /* whaleenemy_01.caf in Resources */,
+				F2E545A819C1697E0095C5ED /* whaleenemy_02.caf in Resources */,
+				F2E545A919C1697E0095C5ED /* whaleenemy_03.caf in Resources */,
+				F2E545AA19C1697E0095C5ED /* whaleidle_01.caf in Resources */,
+				F2E545AB19C1697E0095C5ED /* whaleidle_02.caf in Resources */,
+				F2E545AC19C1697E0095C5ED /* whaleidle_03.caf in Resources */,
+				F2E545AD19C1697E0095C5ED /* whalelowair_01.caf in Resources */,
+				F2E545AE19C1697E0095C5ED /* whaleoutofair_01.caf in Resources */,
+				F2E545AF19C1697E0095C5ED /* whalesong.caf in Resources */,
 				A2BF1E1B19BE0E7F00BAD4C0 /* Images.xcassets in Resources */,
 				A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */,
 				6D06B09C19BFA8BB0012DC6F /* pause.jpg in Resources */,
