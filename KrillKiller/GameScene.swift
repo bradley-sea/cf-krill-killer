@@ -439,14 +439,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func updateDepth (angle : Double) {
         // angle = ~ current angle, value between -30 and 30
-
-//        self.depthLabel.text = "Current Depth: \(self.currentDepth)"
-        self.currentDepth -= (angle / 10)
+        //println("Angle = \(angle)")
+        if ( angle < 0 ) {
+            if currentDepth <= 2000 {
+                currentDepth -= (angle / 10)
+            }
+        } else if (angle >= 0 ) {
+            if currentDepth > 1 {
+                currentDepth -= (angle / 10)
+            }
+        }
+        //println("CurrentDepth = \(currentDepth)")
         self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-        println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
+        //println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
         var bodies = [contact.bodyA,contact.bodyB]
         for eachBody in bodies {
             if let foodNode = eachBody.node as? FoodNode {
@@ -511,7 +519,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.backgroundAudioPlayer = AVAudioPlayer(contentsOfURL: backgroundMusic, error: &error)
         
         if (error != nil) {
-            println("error w background music player \(error?.userInfo)")
+//            println("error w background music player \(error?.userInfo)")
         }
         self.backgroundAudioPlayer.prepareToPlay()
         self.backgroundAudioPlayer.numberOfLoops = -1 // infinite
