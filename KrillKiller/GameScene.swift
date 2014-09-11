@@ -20,7 +20,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var currentScore = 0
     var deltaTime = 0.0
     var timeSinceLastFood = 0.0
-    var nextFoodTime = 0.0
+    var nextFoodTime = 0.2
     var previousTime = 0.0
     var foodYDelta = 0.0
     
@@ -41,7 +41,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //var barColorSpectrum : [UIColor]!
     
     // view properties
-    var oceanDepth = 2000
+    var oceanDepth = 2352
     var ocean : SKSpriteNode!
     var middleXPosition : Int!
     
@@ -58,6 +58,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
         
+        println (self.anchorPoint)
+        
+        
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -65,15 +68,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //crash it:
             assert(1 == 2)
         }
-        var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
-        var oceanWidth = CGFloat(self.view!.frame.width + 100)
-           var oceanSize = CGSize(width: 900 , height: 2352)
+//        var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
+        
+        var oceanSize = CGSize(width: 900 , height: 2352)
         self.ocean = SKSpriteNode(color: UIColor.blueColor(), size: oceanSize)
-        self.ocean.texture = SKTexture(imageNamed: "ocean")
+//        self.ocean.texture = SKTexture(imageNamed: "ocean")
         middleXPosition = Int(scene!.size.height / 2)
         
         self.ocean.anchorPoint = CGPoint(x: 0, y: 0)
-        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + Int(self.currentDepth))
         self.addChild(ocean)
         
         self.setupOceanBackgrounds()
@@ -387,11 +390,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         //Calculate angle of whale to properly move ocean
+        
+        if self.currentDepth >= 0.0 {
+            
+        }
         var newValue = self.translate(self.currentYDirection)
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
         self.whale.zRotation = newRadian
         var testValue = -35.0
         self.updateDepth(newValue)
+
+        
+        
+        //grab delta time
+        self.deltaTime = currentTime - self.previousTime
+        self.previousTime = currentTime
+        self.timeSinceLastFood += self.deltaTime
+        
+        //see if enough time has passed to spawn food
+        if self.timeSinceLastFood > self.nextFoodTime {
+            println("bubble time")
+            self.spawnBubble()
+        }
+        
+        
+        
         
         // Artwork
         // eumerate through wave1
@@ -498,7 +521,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         //println("CurrentDepth = \(currentDepth)")
-        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+        //self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+        self.ocean.position = CGPoint(x: 0, y: self.currentDepth - 2000)
+        //println(self.currentDepth)
+        self.depthLabel.text = "\(self.currentDepth)"
+        println(self.ocean.position)
+       
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -573,4 +601,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.backgroundAudioPlayer.numberOfLoops = -1 // infinite
         self.backgroundAudioPlayer.play()
     }
+    
+    func spawnBubble() -> Void {
+        
+        var bubble = SKSpriteNode(imageNamed: "bubble_01")
+        bubble.size = CGSize(width: bubble.size.width / 3, height: bubble.size.height / 3)
+        
+        var distanceFromGround = 2150 - self.currentDepth
+        
+        
+        var highestBound = CGFloat(distanceFromGround) + (self.view!.frame.height / 2)
+        var lowestBound = CGFloat(distanceFromGround) - (self.view!.frame.height / 2)
+        
+        println("spawning bubbles between \(highestBound) and \(lowestBound)")
+        
+        var yCoord = CGFloat(arc4random() % UInt32(self.view!.frame.height) + UInt32(lowestBound))
+        
+        println(yCoord)
+        
+        bubble.position = CGPoint(x: self.view!.frame.width + 30, y: yCoord)
+        
+        var mover = SKAction.moveToX(-30, duration: 0.6)
+        var remove = SKAction.runBlock({ () -> Void in
+            bubble.removeFromParent()
+        })
+        self.ocean.addChild(bubble)
+        var sequence = SKAction.sequence([mover,remove])
+        bubble.runAction(sequence)
+    }
+
+    
 }
