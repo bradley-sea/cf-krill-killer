@@ -31,9 +31,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // health bar
     var oxygen = 100.0
     var healthBarLocation : CGPoint!
-    var healthBarWidth = 200
-    var healthBarHeight = 20
+//    var healthBarWidth = 61
+//    var healthBarHeight = 16
+    var healthBarWidth = 60
+    var healthBarHeight = 11
     var healthBar : SKSpriteNode!
+    var barColorSpectrum : [UIColor]!
+    //var barColorSpectrum = [AnyObject]()
+    //var barColorSpectrum : [UIColor]!
     
     // view properties
     var oceanDepth = 2000
@@ -116,27 +121,53 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         lifeMeterBar.position = CGPointMake(theScene.frame.width - 46, 24)
         self.addChild(lifeMeterBar)
             
-        }
-        else {
-            //crash it:
-            assert(2 == 3)
-        }
-        
         //add health bar
         var oxygen : Double = 100
         var oxygenMask : SKSpriteNode!
         var healthCropNode = SKCropNode()
         healthBarLocation = CGPoint(x: 110, y: self.scene!.size.height - 20)
         var healthBarBackground = SKSpriteNode(color: UIColor.grayColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
-        healthBarBackground.position = healthBarLocation
+        healthBarBackground.position = lifeMeterBar.frame.origin
+        healthBarBackground.anchorPoint = CGPoint(x: 0, y: 0)
+        healthBarBackground.position.y += 5
+        healthBarBackground.position.x += 4
         self.addChild(healthBarBackground)
         healthBar = SKSpriteNode(color: UIColor.greenColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
-        healthBar.position = CGPoint(x: (healthBarLocation.x - CGFloat(healthBarWidth/2)),
-                                     y: (healthBarLocation.y - CGFloat((healthBarHeight/2))))
-        self.addChild(healthBar)
+        healthBar.position = lifeMeterBar.frame.origin
+        healthBar.position.y += 5
+        healthBar.position.x += 4
         healthBar.anchorPoint = CGPoint(x: 0, y: 0)
+        self.addChild(healthBar)
 
- 
+//        healthBar.zPosition = lifeMeterBar.zPosition - 1
+//        healthBarBackground.zPosition = lifeMeterBar.zPosition - 2
+            
+            
+        //barColorSpectrum = [UIColor](count: 100, repeatedValue: UIColor.brownColor())
+        barColorSpectrum = [UIColor]()
+        for i in 0..<100 {
+//            var redness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
+//            var greenness : CGFloat = CGFloat(1 - redness)
+            var greenness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
+            var redness : CGFloat = CGFloat(1 - greenness)
+            barColorSpectrum.append(UIColor(red: redness, green: greenness, blue: 0.0/255.0, alpha: 1.0))
+            //barColorSpectrum.append( UIColor(red: red, green: green, blue: 0.0/255.0, alpha: 1.0) )
+            //barColorSpectrum.append( UIColor.blueColor() )
+        }
+            
+            println("spectrum count")
+            println(barColorSpectrum.count)
+        
+        println(lifeMeterBar.frame)
+        
+        }
+        else {
+            //crash it:
+            assert(2 == 3)
+        }
+
+
+        
         self.setupMotionDetection()
         
         self.setupSpawnControllers()
@@ -250,10 +281,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.mManager.accelerometerUpdateInterval = 0.05
         self.mManager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue()) { (accelerometerData : CMAccelerometerData!, error) in
             
-            self.currentYDirection = accelerometerData.acceleration.y
+            //keeping track of the devices orientation in relation to our gameplay. we will use this property in our update loop to figure out which way the wale should be pointing
             
-            println(accelerometerData.acceleration.y)
-            
+            self.currentYDirection = accelerometerData.acceleration.y // CHECK: screen rotation changes whale rotation
         }
     }
     
@@ -410,7 +440,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func updateDepth (angle : Double) {
         // angle = ~ current angle, value between -30 and 30
 
-        self.depthLabel.text = "Current Depth: \(self.currentDepth)"
+//        self.depthLabel.text = "Current Depth: \(self.currentDepth)"
         self.currentDepth -= (angle / 10)
         self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
     }
@@ -455,13 +485,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         oxygen -= 0.1
         
         if currentDepth < 1 {
-            if oxygen < 100 {
+            if oxygen < 95 {
                 oxygen += 5
+            } else if oxygen < 100 {
+                oxygen = 100
             }
         }
         
         if oxygen > 0 {
-            healthBar.size.width = CGFloat((healthBarWidth / 100)) * CGFloat(oxygen)
+            healthBar.size.width = CGFloat((Double(healthBarWidth) / 100.0)) * CGFloat(oxygen)
+            if oxygen > 99 {
+                healthBar.color = barColorSpectrum[99]
+            } else {
+                healthBar.color = barColorSpectrum[Int(oxygen)]
+            }
         } else {
             healthBar.size.width = 0
         }
