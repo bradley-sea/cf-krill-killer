@@ -41,7 +41,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //var barColorSpectrum : [UIColor]!
     
     // view properties
-    var oceanDepth = 2352
+    var oceanDepth = 2350
     var ocean : SKSpriteNode!
     var middleXPosition : Int!
     
@@ -72,7 +72,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         var oceanSize = CGSize(width: 900 , height: 2352)
         self.ocean = SKSpriteNode(color: UIColor.blueColor(), size: oceanSize)
-//        self.ocean.texture = SKTexture(imageNamed: "ocean")
         middleXPosition = Int(scene!.size.height / 2)
         
         self.ocean.anchorPoint = CGPoint(x: 0, y: 0)
@@ -521,12 +520,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         //println("CurrentDepth = \(currentDepth)")
-        //self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
-        self.ocean.position = CGPoint(x: 0, y: self.currentDepth - 2000)
-        //println(self.currentDepth)
-        self.depthLabel.text = "\(self.currentDepth)"
-        println(self.ocean.position)
-       
+//        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+        self.ocean.position = CGPoint(x: 0, y: self.currentDepth - 2002)
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
