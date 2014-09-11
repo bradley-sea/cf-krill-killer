@@ -25,6 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var foodYDelta = 0.0
     var timeOfLastMeal = 0.0
     var currentTime = 0.0
+    var magnetBegin = 0.0
     
     //categories:
     let whaleCategory = 0x1 << 0
@@ -370,22 +371,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     func pauseAfterDelay() {
         var timer1 = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: Selector("pauseGame"), userInfo: nil, repeats: false)
-        print()
         timer1.fire()
     }
     func pauseGame() {
         self.view?.paused = true
-        print()
     }
     
     override func update(currentTime: CFTimeInterval) {
         self.currentTime = currentTime
+        println("current depth: \(self.currentDepth)")
         var timeSinceEating = self.currentTime - self.timeOfLastMeal
-        if timeSinceEating < 0.5 {
+        if timeSinceEating < 0.5 && self.timeOfLastMeal != 0 {
             self.whale.texture = SKTexture(imageNamed: "orca_02")
         }
         else {
             self.whale.texture = SKTexture(imageNamed: "orca_01")
+        }
+        var timeSinceMagnet = self.currentTime - self.magnetBegin
+        if self.magnetBegin != 0 && timeSinceMagnet <= 10.0 {
+            self.attractFood()
         }
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
@@ -525,11 +529,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //                    eachBody.node?.removeFromParent()
                     self.currentScore += 1
                 }
-                else if foodName == "fishmed_01" || foodName == "fishmed_03" || foodName == "fishmed_03" {
+                else if foodName == "fishmed_01" || foodName == "fishmed_02" || foodName == "fishmed_03" {
 //                    eachBody.node?.removeFromParent()
                     self.currentScore += 5
                 }
-                else if foodName == "fishlarge_01" || foodName == "fishlarge_04" || foodName == "fishlarge_03" {
+                else if foodName == "fishlarge_01" || foodName == "fishlarge_02" || foodName == "fishlarge_03" {
 //                    eachBody.node? .removeFromParent()
                     self.currentScore += 10
                 }
@@ -545,10 +549,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 else if powerupName == "diver_01" || powerupName == "diver_02" || powerupName == "diver_03" {
                     self.oxygen = 100
                 }
+                else if powerupName == "mermaid_01" || powerupName == "mermaid_02" || powerupName == "mermaid_03" {
+                    self.magnetBegin = self.currentTime
+                }
                 eachBody.node?.removeFromParent()
             }
         }
-        print()
+    }
+    
+    func attractFood() {
+        //should only work for food within decent range:
+        self.ocean.enumerateChildNodesWithName("krill", usingBlock: { (node, stop) -> Void in
+            if let foodNode = node as? FoodNode {
+                foodNode.removeActionForKey("mover")
+                println("\(self.ocean.position.x), \(self.currentDepth)")
+                var whaleMiddle = self.whale.frame.height / 2.0
+                var magnetY = 2000.0 - CGFloat(self.currentDepth) - whaleMiddle
+                var whalePoint = CGPoint(x: CGFloat(self.whale.frame.width / 2),y: magnetY)
+                var magnet = SKAction.moveTo(whalePoint, duration: 0.1)
+                foodNode.runAction(magnet)
+            }
+        })
     }
     
     func updateHealthBar() {

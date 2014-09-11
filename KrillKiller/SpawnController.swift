@@ -39,14 +39,17 @@ class SpawnController {
         //see if enough time has passed to spawn food
         if self.timeSinceLastSpawn > self.frequency {
             self.spawnFood()
-            self.spawnPowerup()
+            var powerupProbability = arc4random() % 3
+            if powerupProbability == 1 {
+                self.spawnPowerup()
+            }
             self.timeSinceLastSpawn = 0
         }
     }
     func spawnFood() {
         
         var krill = FoodNode(depthLevel: self.depthLevel)
-//        krill.name = "food"
+        krill.name = "krill"
         krill.physicsBody = SKPhysicsBody(rectangleOfSize: krill.size)
         krill.physicsBody?.affectedByGravity = false
         krill.physicsBody?.categoryBitMask = UInt32(krillCategory)
@@ -65,7 +68,7 @@ class SpawnController {
         self.ocean.addChild(krill)
         
         var mover = SKAction.moveTo(CGPoint(x: krill.position.x - 800, y: krill.position.y - 100), duration: 2.0)
-        krill.runAction(mover)
+        krill.runAction(mover, withKey: "mover")
     }
     
     func spawnPowerup() {
