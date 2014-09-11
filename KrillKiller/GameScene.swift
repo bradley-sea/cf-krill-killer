@@ -55,7 +55,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // audio
     var backgroundAudioPlayer = AVAudioPlayer()
     
-    
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
         
@@ -75,15 +74,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
         var oceanWidth = CGFloat(self.view!.frame.width + 100)
-        self.ocean = SKSpriteNode(color: color, size: CGSize(width: oceanWidth, height: CGFloat(oceanDepth)))
+           var oceanSize = CGSize(width: 900 , height: 2352)
+        self.ocean = SKSpriteNode(color: UIColor.blueColor(), size: oceanSize)
+        self.ocean.texture = SKTexture(imageNamed: "ocean")
         middleXPosition = Int(scene!.size.height / 2)
         
-        // Ocean background
-//        self.setupOcean()
         self.ocean.anchorPoint = CGPoint(x: 0, y: 0)
-        //self.ocean.position = CGPoint(x: 0, y: 0)
         self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
         self.addChild(ocean)
+        
+        self.setupOceanBackgrounds()
         
         // Sky background
         var skyBG = SKSpriteNode(imageNamed: "sky_01.png")
@@ -186,6 +186,67 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.startBackgroundMusic()
     }
     
+    func setupOceanBackgrounds() {
+        
+        //total ocean size
+        var oceanSize = CGSize(width: 900 , height: 2352)
+        
+        var imageHeightInPoints : CGFloat = 784
+        
+        //add top images
+        var topOffset = CGFloat(oceanSize.height - imageHeightInPoints)
+        var topImageOrigin = CGPoint(x: 0, y: topOffset)
+        
+        var top = SKSpriteNode(imageNamed: "oceantop_01")
+        top.anchorPoint = CGPointZero
+        top.position = topImageOrigin
+        self.ocean.addChild(top)
+        
+        var top2 = SKSpriteNode(imageNamed: "oceantop_01")
+        top2.anchorPoint = CGPointZero
+        top2.position = CGPoint(x: 900, y: topOffset)
+        self.ocean.addChild(top2)
+        
+        top.name = "ocean"
+        top2.name = "ocean"
+        
+        //add middle images
+        var middleOffset = CGFloat(oceanSize.height - (imageHeightInPoints * 2))
+        var middleImageOrigin = CGPoint(x: 0, y: middleOffset)
+        
+        var middle = SKSpriteNode(imageNamed: "oceanmiddle_01")
+        middle.anchorPoint = CGPointZero
+        middle.position = middleImageOrigin
+        self.ocean.addChild(middle)
+        
+        var middle2 = SKSpriteNode(imageNamed: "oceanmiddle_01")
+        middle2.anchorPoint = CGPointZero
+        middle2.position = CGPoint(x: 900, y: middleOffset)
+        self.ocean.addChild(middle2)
+        
+        middle.name = "ocean"
+        middle2.name = "ocean"
+        
+        
+        //add bottom images
+        var bottomOffset = CGFloat(0)
+        var bottomImageOrigin = CGPoint(x: 0, y: bottomOffset)
+        
+        var bottom = SKSpriteNode(imageNamed: "oceanbottom_01")
+        bottom.anchorPoint = CGPointZero
+        bottom.position = bottomImageOrigin
+        self.ocean.addChild(bottom)
+        
+        var bottom2 = SKSpriteNode(imageNamed: "oceanbottom_01")
+        bottom2.anchorPoint = CGPointZero
+        bottom2.position = CGPoint(x: 900, y: bottomOffset)
+        self.ocean.addChild(bottom2)
+        
+        bottom.name = "ocean"
+        bottom2.name = "ocean"
+        
+    }
+    
     func setupSpawnControllers() {
         
         var area1 = CGRect(x: self.view!.frame.width + 20, y: 1334, width: 200, height: 666)
@@ -213,20 +274,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.whale)
     }
     
-    
-    func setupOcean() {
-        
-        for var i = 0; i < 2; i++ {
-
-            var newI = CGFloat(i)
-
-            var oceanBG = SKSpriteNode(imageNamed: "ocean_01.png")
-            oceanBG.anchorPoint = CGPointZero
-            oceanBG.position = CGPointMake(newI * oceanBG.size.width, -720)
-            oceanBG.name = "ocean"
-            self.addChild(oceanBG)
-        }
-    }
     
     func setupWaves() {
         
@@ -358,6 +405,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var newValue = self.translate(self.currentYDirection)
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
         self.whale.zRotation = newRadian
+        var testValue = -35.0
         self.updateDepth(newValue)
         
         // Artwork
@@ -429,9 +477,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
 
         // ocean
-        self.enumerateChildNodesWithName("ocean", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("ocean", usingBlock: { (node, stop) -> Void in
             if let oceanBG = node as? SKSpriteNode {
-                oceanBG.position = CGPointMake(oceanBG.position.x - 2.5, oceanBG.position.y) // sidescroll speed
+                oceanBG.position = CGPointMake(oceanBG.position.x - 0.5, oceanBG.position.y) // sidescroll speed
                 if oceanBG.position.x <= oceanBG.size.width * -1 {
                     oceanBG.position = CGPointMake(oceanBG.position.x + oceanBG.size.width * 2, oceanBG.position.y)
                 }
