@@ -38,7 +38,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // overlay
     var overlay : SKShapeNode!
-    var clearColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.0)
+    var clearColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+    var overlayColorSpectrum : [UIColor]!
     
     // view properties
     var oceanDepth = 2000
@@ -65,12 +66,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //crash it:
             assert(1 == 2)
         }
-        
-        var overlayRect = CGRect(origin: self.view!.frame.origin, size: self.view!.frame.size)
-        overlay = SKShapeNode(rect: overlayRect)
-        overlay.fillColor = clearColor
-        self.addChild(overlay)
-        overlay.zPosition = 99
         
         var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
         var oceanWidth = CGFloat(self.view!.frame.width + 100)
@@ -99,7 +94,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.setupWhale()
         
         //set background to blue
-        self.backgroundColor = UIColor.grayColor()
+        //self.backgroundColor = UIColor.grayColor()
         
         //adding label to keep track of the current depth
         self.depthLabel.position = CGPoint(x: 280, y: 10)
@@ -153,24 +148,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         healthBar.zPosition = 101
         lifeMeterBar.zPosition = 102
             
-            
-        //barColorSpectrum = [UIColor](count: 100, repeatedValue: UIColor.brownColor())
         barColorSpectrum = [UIColor]()
         for i in 0..<100 {
-//            var redness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
-//            var greenness : CGFloat = CGFloat(1 - redness)
             var greenness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
             var redness : CGFloat = CGFloat(1 - greenness)
             barColorSpectrum.append(UIColor(red: redness, green: greenness, blue: 0.0/255.0, alpha: 1.0))
-            //barColorSpectrum.append( UIColor(red: red, green: green, blue: 0.0/255.0, alpha: 1.0) )
-            //barColorSpectrum.append( UIColor.blueColor() )
         }
-            
-            println("spectrum count")
-            println(barColorSpectrum.count)
+
+        var overlayRect = CGRect(origin: self.view!.frame.origin, size: self.view!.frame.size)
+        overlay = SKShapeNode(rect: overlayRect)
+        overlay.fillColor = clearColor
+        //self.addChild(overlay)
+        //overlay.zPosition = 99
         
-        println(lifeMeterBar.frame)
+        overlayColorSpectrum = [UIColor]()
+            for i in 0..<50 {
+            alpha = CGFloat((i % 5) / 10)
+            println("Overlay Alpha = \(alpha)")
+            overlayColorSpectrum.append(UIColor(red: 1, green: 0, blue: 0, alpha: alpha))
+        }
         
+
         }
         else {
             //crash it:
@@ -387,10 +385,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(currentTime: CFTimeInterval) {
-        
-        for node in self.children {
-            println(node.zPosition)
-        }
 
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
@@ -575,11 +569,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             healthBar.size.width = 0
         }
         
-        if oxygen < 30 {
-            displayOxygenWarning()
-        } else {
-            overlay.fillColor = clearColor
-        }
+//        if oxygen < 30 {
+//            displayOxygenWarning()
+//        } else {
+//            overlay.fillColor = clearColor
+//        }
+        
+//        switch oxygen {
+//            case 0:
+//                gameOver()
+//            case 0..<50:
+//                overlay.fillColor = overlayColorSpectrum[Int(oxygen)]
+//            default:
+//                overlay.fillColor = clearColor
+//        }
     }
     
     func startBackgroundMusic() {
@@ -596,7 +599,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.backgroundAudioPlayer.play()
     }
     
-    func displayOxygenWarning() {
-        overlay.fillColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5)
+//    func displayOxygenWarning() {
+//        
+//        
+//    }
+    
+    func gameOver() {
+        
     }
 }
