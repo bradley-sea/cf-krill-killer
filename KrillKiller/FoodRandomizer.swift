@@ -79,7 +79,7 @@ class FoodRandomizer {
     func spawnRandomPowerup(depthLevel : Int) -> (String, String) {
         var name = "powerup"
         var imageName = "bubble"
-        var powerupType = (arc4random() % 3) + 1
+        var powerupType = (arc4random() % 7) + 1
         if powerupType == 1 {
             //then it's a bubble:
             var bubbleType = (arc4random() % 3) + 1

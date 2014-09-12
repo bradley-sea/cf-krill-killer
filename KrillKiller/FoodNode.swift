@@ -32,7 +32,7 @@ class FoodNode: SKSpriteNode {
     var driftHighNearPoint : CGPoint?
     var driftHighFarPoint : CGPoint?
     var foodType : Food!
-    
+    var attracted = false
     var imageName : String!
     
     init(depthLevel : Int) {

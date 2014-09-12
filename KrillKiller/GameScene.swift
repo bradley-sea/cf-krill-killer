@@ -545,6 +545,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
         var bodies = [contact.bodyA,contact.bodyB]
         for eachBody in bodies {
+            println(eachBody.node?.name)
             if let foodNode = eachBody.node as? FoodNode {
                 var foodName = foodNode.imageName
                 if foodName == "krill" {
@@ -580,6 +581,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
                 eachBody.node?.removeFromParent()
             }
+            
         }
     }
     
@@ -587,13 +589,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //should only work for food within decent range:
         self.ocean.enumerateChildNodesWithName("krill", usingBlock: { (node, stop) -> Void in
             if let foodNode = node as? FoodNode {
-                foodNode.removeActionForKey("mover")
+                
                 println("\(self.ocean.position.x), \(self.currentDepth)")
                 var whaleMiddle = self.whale.frame.height / 2.0
-                var magnetY = 2000.0 - CGFloat(self.currentDepth) - whaleMiddle
+                println(whaleMiddle)
+                var magnetY : CGFloat = 0.0
+                if let theScene = self.scene?.frame.height {
+                    magnetY = 2000.0 - CGFloat(self.currentDepth) + CGFloat(theScene) / 2.0 //plus screen middle?
+                }
                 var whalePoint = CGPoint(x: CGFloat(self.whale.frame.width / 2),y: magnetY)
+                println("whaleHeight: \(self.whale.frame.height)")
+                println("moveTo: \(whalePoint)")
+                //find out food's location:
+                var foodX = foodNode.position.x
+                var foodY = foodNode.position.y
+                var deltaX = foodX - whalePoint.x
+                var deltaY = foodY - whalePoint.y
+                var distSquared = deltaX * deltaX + deltaY + deltaY
+                println("\(foodX),\(foodY)")
                 var magnet = SKAction.moveTo(whalePoint, duration: 0.1)
-                foodNode.runAction(magnet)
+                if sqrt(distSquared) <= 100.0 {
+                foodNode.removeActionForKey("mover")
+                if foodNode.hasActions() == false && sqrt(distSquared) <= 110.0 {
+                    foodNode.runAction(magnet)
+                    foodNode.attracted = true
+                }
+                }
             }
         })
     }
