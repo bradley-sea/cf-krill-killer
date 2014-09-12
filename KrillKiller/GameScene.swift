@@ -601,6 +601,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.timeOfLastMeal = self.currentTime
                 eachBody.node?.removeFromParent()
                 self.soundPlayManager.playEatSound(contact.bodyA.node!)
+            } else if eachBody.node?.name == "enemy" {
+                self.oxygen = self.oxygen - 10
             }
             else if let powerupNode = eachBody.node as? PowerupNode {
                 var powerupName = powerupNode.imageName
@@ -614,8 +616,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.magnetBegin = self.currentTime
                 }
                 eachBody.node?.removeFromParent()
-            } else if eachBody.node?.name == "enemy" {
-                self.oxygen = self.oxygen - 10
             }
             else if eachBody.node?.name == nil {
                 eachBody.node?.removeFromParent()
