@@ -12,12 +12,6 @@
 		6D06B09E19BFAA580012DC6F /* play.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6D06B09D19BFAA580012DC6F /* play.jpg */; };
 		6DBFA51419C0F77000C58F03 /* SpawnController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBFA51319C0F77000C58F03 /* SpawnController.swift */; };
 		6DF7008F19C0D4C90068231E /* FoodRandomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */; };
-		A25E1DC419C21C72008161BC /* oceanbottom_01@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A25E1DBE19C21C72008161BC /* oceanbottom_01@2x.png */; };
-		A25E1DC519C21C72008161BC /* oceanbottom_01@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A25E1DBF19C21C72008161BC /* oceanbottom_01@3x.png */; };
-		A25E1DC619C21C72008161BC /* oceanmiddle_01@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A25E1DC019C21C72008161BC /* oceanmiddle_01@2x.png */; };
-		A25E1DC719C21C72008161BC /* oceanmiddle_01@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A25E1DC119C21C72008161BC /* oceanmiddle_01@3x.png */; };
-		A25E1DC819C21C72008161BC /* oceantop_01@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A25E1DC219C21C72008161BC /* oceantop_01@2x.png */; };
-		A25E1DC919C21C72008161BC /* oceantop_01@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A25E1DC319C21C72008161BC /* oceantop_01@3x.png */; };
 		A2BF1E1019BE0E7F00BAD4C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E0F19BE0E7F00BAD4C0 /* AppDelegate.swift */; };
 		A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E1119BE0E7F00BAD4C0 /* GameScene.sks */; };
 		A2BF1E1419BE0E7F00BAD4C0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E1319BE0E7F00BAD4C0 /* GameScene.swift */; };
@@ -25,7 +19,6 @@
 		A2BF1E1919BE0E7F00BAD4C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E1719BE0E7F00BAD4C0 /* Main.storyboard */; };
 		A2BF1E1B19BE0E7F00BAD4C0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E1A19BE0E7F00BAD4C0 /* Images.xcassets */; };
 		A2BF1E2719BE0E7F00BAD4C0 /* KrillKillerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E2619BE0E7F00BAD4C0 /* KrillKillerTests.swift */; };
-		A2BF1E3219BE0E9100BAD4C0 /* KillerWhale.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */; };
 		A2BF1E3319BE0E9100BAD4C0 /* krill.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E3119BE0E9100BAD4C0 /* krill.png */; };
 		F27CA10619BF6777005E5653 /* FoodNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27CA10519BF6777005E5653 /* FoodNode.swift */; };
 		F27CA10819BF9CC5005E5653 /* WhaleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27CA10719BF9CC5005E5653 /* WhaleNode.swift */; };
@@ -67,12 +60,6 @@
 		6D06B09D19BFAA580012DC6F /* play.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = play.jpg; sourceTree = "<group>"; };
 		6DBFA51319C0F77000C58F03 /* SpawnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpawnController.swift; sourceTree = "<group>"; };
 		6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodRandomizer.swift; sourceTree = "<group>"; };
-		A25E1DBE19C21C72008161BC /* oceanbottom_01@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oceanbottom_01@2x.png"; sourceTree = "<group>"; };
-		A25E1DBF19C21C72008161BC /* oceanbottom_01@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oceanbottom_01@3x.png"; sourceTree = "<group>"; };
-		A25E1DC019C21C72008161BC /* oceanmiddle_01@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oceanmiddle_01@2x.png"; sourceTree = "<group>"; };
-		A25E1DC119C21C72008161BC /* oceanmiddle_01@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oceanmiddle_01@3x.png"; sourceTree = "<group>"; };
-		A25E1DC219C21C72008161BC /* oceantop_01@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oceantop_01@2x.png"; sourceTree = "<group>"; };
-		A25E1DC319C21C72008161BC /* oceantop_01@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oceantop_01@3x.png"; sourceTree = "<group>"; };
 		A2BF1E0A19BE0E7F00BAD4C0 /* KrillKiller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KrillKiller.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2BF1E0E19BE0E7F00BAD4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2BF1E0F19BE0E7F00BAD4C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,7 +71,6 @@
 		A2BF1E2019BE0E7F00BAD4C0 /* KrillKillerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KrillKillerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2BF1E2519BE0E7F00BAD4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2BF1E2619BE0E7F00BAD4C0 /* KrillKillerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrillKillerTests.swift; sourceTree = "<group>"; };
-		A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = KillerWhale.png; sourceTree = "<group>"; };
 		A2BF1E3119BE0E9100BAD4C0 /* krill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = krill.png; sourceTree = "<group>"; };
 		F27CA10519BF6777005E5653 /* FoodNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodNode.swift; sourceTree = "<group>"; };
 		F27CA10719BF9CC5005E5653 /* WhaleNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhaleNode.swift; sourceTree = "<group>"; };
@@ -158,17 +144,10 @@
 				F27CA10519BF6777005E5653 /* FoodNode.swift */,
 				6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */,
 				6DBFA51319C0F77000C58F03 /* SpawnController.swift */,
-				A2BF1E3019BE0E9100BAD4C0 /* KillerWhale.png */,
 				A2BF1E3119BE0E9100BAD4C0 /* krill.png */,
 				6D06B09B19BFA8BB0012DC6F /* pause.jpg */,
 				6D06B09D19BFAA580012DC6F /* play.jpg */,
 				A2BF1E1719BE0E7F00BAD4C0 /* Main.storyboard */,
-				A25E1DBE19C21C72008161BC /* oceanbottom_01@2x.png */,
-				A25E1DBF19C21C72008161BC /* oceanbottom_01@3x.png */,
-				A25E1DC019C21C72008161BC /* oceanmiddle_01@2x.png */,
-				A25E1DC119C21C72008161BC /* oceanmiddle_01@3x.png */,
-				A25E1DC219C21C72008161BC /* oceantop_01@2x.png */,
-				A25E1DC319C21C72008161BC /* oceantop_01@3x.png */,
 				A2BF1E1A19BE0E7F00BAD4C0 /* Images.xcassets */,
 				F2E5456E19C1543E0095C5ED /* audio */,
 				A2BF1E0D19BE0E7F00BAD4C0 /* Supporting Files */,
@@ -318,7 +297,6 @@
 				F2E545A119C1697E0095C5ED /* whaleeat_05.caf in Resources */,
 				F2E545A219C1697E0095C5ED /* whaleeat_06.caf in Resources */,
 				F2E545A319C1697E0095C5ED /* whaleeat_07.caf in Resources */,
-				A25E1DC819C21C72008161BC /* oceantop_01@2x.png in Resources */,
 				F2E545A419C1697E0095C5ED /* whaleeat_08.caf in Resources */,
 				F2E545A519C1697E0095C5ED /* whaleeat_09.caf in Resources */,
 				F2E545A619C1697E0095C5ED /* whaleeat_10.caf in Resources */,
@@ -326,21 +304,15 @@
 				F2E545A819C1697E0095C5ED /* whaleenemy_02.caf in Resources */,
 				F2E545A919C1697E0095C5ED /* whaleenemy_03.caf in Resources */,
 				F2E545AA19C1697E0095C5ED /* whaleidle_01.caf in Resources */,
-				A25E1DC619C21C72008161BC /* oceanmiddle_01@2x.png in Resources */,
 				F2E545AB19C1697E0095C5ED /* whaleidle_02.caf in Resources */,
-				A25E1DC919C21C72008161BC /* oceantop_01@3x.png in Resources */,
 				F2E545AC19C1697E0095C5ED /* whaleidle_03.caf in Resources */,
 				F2E545AD19C1697E0095C5ED /* whalelowair_01.caf in Resources */,
 				F2E545AE19C1697E0095C5ED /* whaleoutofair_01.caf in Resources */,
 				F2E545AF19C1697E0095C5ED /* whalesong.caf in Resources */,
 				A2BF1E1B19BE0E7F00BAD4C0 /* Images.xcassets in Resources */,
-				A25E1DC519C21C72008161BC /* oceanbottom_01@3x.png in Resources */,
 				A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */,
 				6D06B09C19BFA8BB0012DC6F /* pause.jpg in Resources */,
-				A25E1DC719C21C72008161BC /* oceanmiddle_01@3x.png in Resources */,
-				A2BF1E3219BE0E9100BAD4C0 /* KillerWhale.png in Resources */,
 				6D06B09E19BFAA580012DC6F /* play.jpg in Resources */,
-				A25E1DC419C21C72008161BC /* oceanbottom_01@2x.png in Resources */,
 				A2BF1E3319BE0E9100BAD4C0 /* krill.png in Resources */,
 				A2BF1E1919BE0E7F00BAD4C0 /* Main.storyboard in Resources */,
 			);

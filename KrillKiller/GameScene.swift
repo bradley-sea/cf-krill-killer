@@ -19,8 +19,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pauseButton = SKSpriteNode(imageNamed: "pause.jpg")
     var currentScore = 0
     var deltaTime = 0.0
-    var timeSinceLastFood = 0.0
-    var nextFoodTime = 0.0
+    var timeSinceLastSmallBubble = 0.0
+    var nextSmallBubbleTime = 0.2
     var previousTime = 0.0
     var foodYDelta = 0.0
     
@@ -45,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameOverLabel : SKLabelNode!
     
     // view properties
-    var oceanDepth = 2000
+    var oceanDepth = 2350
     var ocean : SKSpriteNode!
     var middleXPosition : Int!
     var middleYPosition : Int!
@@ -62,6 +62,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMoveToView(view: SKView) {
         self.physicsWorld.contactDelegate = self
+        
+        println (self.anchorPoint)
+        
         
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
@@ -80,7 +83,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         middleYPosition = Int(scene!.size.height / 2)
         
         self.ocean.anchorPoint = CGPoint(x: 0, y: 0)
-        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + Int(self.currentDepth))
         self.addChild(ocean)
         
         self.setupOceanBackgrounds()
@@ -195,7 +198,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupOceanBackgrounds() {
         
         //total ocean size
-        var oceanSize = CGSize(width: 900 , height: 2352)
+        var oceanSize = CGSize(width: 900.5 , height: 2352)
         
         var imageHeightInPoints : CGFloat = 784
         
@@ -203,15 +206,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var topOffset = CGFloat(oceanSize.height - imageHeightInPoints)
         var topImageOrigin = CGPoint(x: 0, y: topOffset)
         
-        var top = SKSpriteNode(imageNamed: "oceantop_01")
+        var top = SKSpriteNode(imageNamed: "oceantop_01jp")
         top.anchorPoint = CGPointZero
         top.position = topImageOrigin
         self.ocean.addChild(top)
         
-        var top2 = SKSpriteNode(imageNamed: "oceantop_01")
+        var top2 = SKSpriteNode(imageNamed: "oceantop_01jp")
         top2.anchorPoint = CGPointZero
-        top2.position = CGPoint(x: 900, y: topOffset)
+        top2.position = CGPoint(x: 900.5, y: topOffset)
         self.ocean.addChild(top2)
+        
+        println(top2.size.width)
         
         top.name = "ocean"
         top2.name = "ocean"
@@ -220,14 +225,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var middleOffset = CGFloat(oceanSize.height - (imageHeightInPoints * 2))
         var middleImageOrigin = CGPoint(x: 0, y: middleOffset)
         
-        var middle = SKSpriteNode(imageNamed: "oceanmiddle_01")
+        var middle = SKSpriteNode(imageNamed: "oceanmiddle_01jp")
         middle.anchorPoint = CGPointZero
         middle.position = middleImageOrigin
         self.ocean.addChild(middle)
         
-        var middle2 = SKSpriteNode(imageNamed: "oceanmiddle_01")
+        var middle2 = SKSpriteNode(imageNamed: "oceanmiddle_01jp")
         middle2.anchorPoint = CGPointZero
-        middle2.position = CGPoint(x: 900, y: middleOffset)
+        middle2.position = CGPoint(x: 900.5, y: middleOffset)
         self.ocean.addChild(middle2)
         
         middle.name = "ocean"
@@ -238,14 +243,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var bottomOffset = CGFloat(0)
         var bottomImageOrigin = CGPoint(x: 0, y: bottomOffset)
         
-        var bottom = SKSpriteNode(imageNamed: "oceanbottom_01")
+        var bottom = SKSpriteNode(imageNamed: "oceanbottom_01jp")
         bottom.anchorPoint = CGPointZero
         bottom.position = bottomImageOrigin
         self.ocean.addChild(bottom)
         
-        var bottom2 = SKSpriteNode(imageNamed: "oceanbottom_01")
+        var bottom2 = SKSpriteNode(imageNamed: "oceanbottom_01jp")
         bottom2.anchorPoint = CGPointZero
-        bottom2.position = CGPoint(x: 900, y: bottomOffset)
+        bottom2.position = CGPoint(x: 900.5, y: bottomOffset)
         self.ocean.addChild(bottom2)
         
         bottom.name = "ocean"
@@ -405,11 +410,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         //Calculate angle of whale to properly move ocean
+        
+        if self.currentDepth >= 0.0 {
+            
+        }
         var newValue = self.translate(self.currentYDirection)
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
         self.whale.zRotation = newRadian
         var testValue = -35.0
         self.updateDepth(newValue)
+
+        
+        
+        //grab delta time
+        self.deltaTime = currentTime - self.previousTime
+        self.previousTime = currentTime
+        self.timeSinceLastSmallBubble += self.deltaTime
+        
+        //see if enough time has passed to spawn food
+        if self.timeSinceLastSmallBubble > self.nextSmallBubbleTime {
+            println("bubble time")
+            self.spawnBubble()
+            self.timeSinceLastSmallBubble = 0
+        }
+        
+        self.depthLabel.text = "\(2000 - self.currentDepth)"
+        
         
         // Artwork
         // eumerate through wave1
@@ -481,7 +507,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // ocean
         self.ocean.enumerateChildNodesWithName("ocean", usingBlock: { (node, stop) -> Void in
             if let oceanBG = node as? SKSpriteNode {
-                oceanBG.position = CGPointMake(oceanBG.position.x - 0.5, oceanBG.position.y) // sidescroll speed
+                oceanBG.position = CGPointMake(oceanBG.position.x - 1, oceanBG.position.y) // sidescroll speed
                 if oceanBG.position.x <= oceanBG.size.width * -1 {
                     oceanBG.position = CGPointMake(oceanBG.position.x + oceanBG.size.width * 2, oceanBG.position.y)
                 }
@@ -516,7 +542,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         //println("CurrentDepth = \(currentDepth)")
-        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+//        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
+        self.ocean.position = CGPoint(x: 0, y: self.currentDepth - 2002)
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
