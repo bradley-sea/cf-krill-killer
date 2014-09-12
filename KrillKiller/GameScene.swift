@@ -184,7 +184,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             breatheLabel = setupOverlayText("Breathe!")
             pausedLabel = setupOverlayText("Paused")
-            pausedLabel.alpha = 1
+            pausedLabel.alpha = 0
             gameOverLabel = setupOverlayText("GAME OVER")
             
         }
@@ -614,6 +614,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.magnetBegin = self.currentTime
                 }
                 eachBody.node?.removeFromParent()
+            } else if eachBody.node?.name == "enemy" {
+                self.oxygen = self.oxygen - 10
             }
             else if eachBody.node?.name == nil {
                 eachBody.node?.removeFromParent()
