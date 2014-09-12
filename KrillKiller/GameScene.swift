@@ -50,6 +50,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var middleXPosition : Int!
     var middleYPosition : Int!
     
+    var waves : SKSpriteNode!
+    
     //motion properties
     var mManager = CMMotionManager()
     var currentYDirection : Double = 0.0
@@ -60,7 +62,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // audio
     var backgroundAudioPlayer = AVAudioPlayer()
     
-    override func didMoveToView(view: SKView) {
+    override func didMoveToView(view: SKView) {        
+        
         self.physicsWorld.contactDelegate = self
         
         println (self.anchorPoint)
@@ -74,9 +77,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             assert(1 == 2)
         }
         
-        var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
-        var oceanWidth = CGFloat(self.view!.frame.width + 100)
-        var oceanSize = CGSize(width: 900 , height: 2352)
+        // Ocean background
+//        var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
+//        var oceanWidth = CGFloat(self.view!.frame.width + 100)
+         var oceanSize = CGSize(width: 900 , height: 2352)
         self.ocean = SKSpriteNode(color: UIColor.blueColor(), size: oceanSize)
         self.ocean.texture = SKTexture(imageNamed: "ocean")
         middleXPosition = Int(self.view!.frame.width / 2)
@@ -89,20 +93,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.setupOceanBackgrounds()
         
         // Sky background
-        var skyBG = SKSpriteNode(imageNamed: "sky_01.png")
-        skyBG.position = CGPointMake(284, 290)
-        //        self.addChild(skyBG)
+//        var skyBG = SKSpriteNode(imageNamed: "sky_01.png")
+//        skyBG.position = CGPointMake(284, 290)
+//        self.addChild(skyBG)
         
         // Clouds
-        //        self.setupClouds()
-        
+        self.setupClouds()
+
         // Wave background
-        //        self.setupWaves()
+        self.setupWaves()
         
         self.setupWhale()
         
-        //set background to blue
-        self.backgroundColor = UIColor.grayColor()
+        self.setupWaveAlphaFade()
+        
+//        //set background to blue
+//        self.backgroundColor = UIColor.grayColor()
         
         //adding label to keep track of the current depth
         self.depthLabel.position = CGPoint(x: 280, y: 10)
@@ -121,33 +127,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //            self.pauseButton.size = CGSize(width: 25, height: 25)
             //            self.addChild(self.pauseButton)
             
-            // Score bar
-            var scoreBar = SKSpriteNode(imageNamed: "uiscorebar_01.png")
-            scoreBar.position = CGPointMake(45, 24)
-            self.addChild(scoreBar)
+        // UI: Score bar
+        var scoreBar = SKSpriteNode(imageNamed: "uiscorebar_01.png")
+        scoreBar.position = CGPointMake(45, 24)
+        self.addChild(scoreBar)
+        
+        // UI: Lifemeter bar
+        var lifeMeterBar = SKSpriteNode(imageNamed: "uilifemeterbar_01.png")
+        lifeMeterBar.position = CGPointMake(theScene.frame.width - 46, 24)
+        self.addChild(lifeMeterBar)
             
-            // Lifemeter bar
-            var lifeMeterBar = SKSpriteNode(imageNamed: "uilifemeterbar_01.png")
-            lifeMeterBar.position = CGPointMake(theScene.frame.width - 46, 24)
-            self.addChild(lifeMeterBar)
-            
-            //add health bar
-            var oxygen : Double = 100
-            var oxygenMask : SKSpriteNode!
-            var healthCropNode = SKCropNode()
-            healthBarLocation = CGPoint(x: 110, y: self.scene!.size.height - 20)
-            var healthBarBackground = SKSpriteNode(color: UIColor.grayColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
-            healthBarBackground.position = lifeMeterBar.frame.origin
-            healthBarBackground.anchorPoint = CGPoint(x: 0, y: 0)
-            healthBarBackground.position.y += 5
-            healthBarBackground.position.x += 4
-            self.addChild(healthBarBackground)
-            healthBar = SKSpriteNode(color: UIColor.greenColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
-            healthBar.position = lifeMeterBar.frame.origin
-            healthBar.position.y += 5
-            healthBar.position.x += 4
-            healthBar.anchorPoint = CGPoint(x: 0, y: 0)
-            self.addChild(healthBar)
+        // UI: add health bar
+        var oxygen : Double = 100
+        var oxygenMask : SKSpriteNode!
+        var healthCropNode = SKCropNode()
+        healthBarLocation = CGPoint(x: 110, y: self.scene!.size.height - 20)
+        var healthBarBackground = SKSpriteNode(color: UIColor.grayColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
+        healthBarBackground.position = lifeMeterBar.frame.origin
+        healthBarBackground.anchorPoint = CGPoint(x: 0, y: 0)
+        healthBarBackground.position.y += 5
+        healthBarBackground.position.x += 4
+        self.addChild(healthBarBackground)
+        healthBar = SKSpriteNode(color: UIColor.greenColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
+        healthBar.position = lifeMeterBar.frame.origin
+        healthBar.position.y += 5
+        healthBar.position.x += 4
+        healthBar.anchorPoint = CGPoint(x: 0, y: 0)
+        self.addChild(healthBar)
+
+//        healthBar.zPosition = lifeMeterBar.zPosition - 1
+//        healthBarBackground.zPosition = lifeMeterBar.zPosition - 2
             
             healthBarBackground.zPosition = 100
             healthBar.zPosition = 101
@@ -294,21 +303,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             var wave3BG = SKSpriteNode(imageNamed: "wave_03.png")
             wave3BG.anchorPoint = CGPointZero
-            wave3BG.position = CGPointMake(newI * wave3BG.size.width, 250)
+            wave3BG.position = CGPointMake(newI * wave3BG.size.width, 2180)
             wave3BG.name = "wave3"
-            self.addChild(wave3BG)
+            self.ocean.addChild(wave3BG)
             
             var wave2BG = SKSpriteNode(imageNamed: "wave_02.png")
             wave2BG.anchorPoint = CGPointZero
-            wave2BG.position = CGPointMake(-newI * wave2BG.size.width, 244)
+            wave2BG.position = CGPointMake(-newI * wave2BG.size.width, 2180)
             wave2BG.name = "wave2"
-            self.addChild(wave2BG)
-            
+            self.ocean.addChild(wave2BG)
+
             var wave1BG = SKSpriteNode(imageNamed: "wave_01.png")
             wave1BG.anchorPoint = CGPointZero
-            wave1BG.position = CGPointMake(newI * wave1BG.size.width, 239)
+            wave1BG.position = CGPointMake(newI * wave1BG.size.width, 2180)
             wave1BG.name = "wave1"
-            self.addChild(wave1BG)
+            self.ocean.addChild(wave1BG)
+//            self.addChild(wave1BG)
+        }
+    }
+    
+    func setupWaveAlphaFade() {
+        
+        for var i = 0; i < 2; i++ {
+            
+            var newI = CGFloat(i)
+            
+            var wave1bBG = SKSpriteNode(imageNamed: "wave_01b.png")
+            wave1bBG.anchorPoint = CGPointZero
+            wave1bBG.position = CGPointMake(newI * wave1bBG.size.width, 2170)
+            wave1bBG.name = "wave0"
+            self.ocean.addChild(wave1bBG)
         }
     }
     
@@ -320,27 +344,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             var cloud1BG = SKSpriteNode(imageNamed: "cloud_01.png")
             cloud1BG.anchorPoint = CGPointZero
-            cloud1BG.position = CGPointMake(newI * cloud1BG.size.width - 100, 290) //3rd
+            cloud1BG.position = CGPointMake(newI * cloud1BG.size.width - 100, 2250) //3rd
             cloud1BG.name = "cloud1"
-            self.addChild(cloud1BG)
-            
+            self.ocean.addChild(cloud1BG)
+
             var cloud2BG = SKSpriteNode(imageNamed: "cloud_02.png")
             cloud2BG.anchorPoint = CGPointZero
-            cloud2BG.position = CGPointMake(newI * cloud2BG.size.width - 60, 300) //1st
+            cloud2BG.position = CGPointMake(newI * cloud2BG.size.width - 60, 2280) //1st
             cloud2BG.name = "cloud2"
-            self.addChild(cloud2BG)
-            
+            self.ocean.addChild(cloud2BG)
+ 
             var cloud3BG = SKSpriteNode(imageNamed: "cloud_03.png")
             cloud3BG.anchorPoint = CGPointZero
-            cloud3BG.position = CGPointMake(newI * cloud3BG.size.width - 60, 293) //2nd
+            cloud3BG.position = CGPointMake(newI * cloud3BG.size.width - 60, 2240) //2nd
             cloud3BG.name = "cloud3"
-            self.addChild(cloud3BG)
+            self.ocean.addChild(cloud3BG)
             
             var cloud4BG = SKSpriteNode(imageNamed: "cloud_04.png")
             cloud4BG.anchorPoint = CGPointZero
-            cloud4BG.position = CGPointMake(newI * cloud4BG.size.width - 60, 299)
+            cloud4BG.position = CGPointMake(newI * cloud4BG.size.width - 60, 2265)
             cloud4BG.name = "cloud4"
-            self.addChild(cloud4BG)
+            self.ocean.addChild(cloud4BG)
         }
     }
     
@@ -399,7 +423,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(currentTime: CFTimeInterval) {
-        
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
         
@@ -439,7 +462,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Artwork
         // eumerate through wave1
-        self.enumerateChildNodesWithName("wave1", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("wave1", usingBlock: { (node, stop) -> Void in
             if let wave1BG = node as? SKSpriteNode {
                 wave1BG.position = CGPointMake(wave1BG.position.x - 0.2, wave1BG.position.y) // sidescroll speed
                 if wave1BG.position.x <= wave1BG.size.width * -1 {
@@ -448,10 +471,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         })
         
+        // eumerate through wave1b - front fade (needs to match wave1)
+        self.ocean.enumerateChildNodesWithName("wave0", usingBlock: { (node, stop) -> Void in
+            if let wave1bBG = node as? SKSpriteNode {
+                wave1bBG.position = CGPointMake(wave1bBG.position.x - 0.2, wave1bBG.position.y) // sidescroll speed
+                if wave1bBG.position.x <= wave1bBG.size.width * -1 {
+                    wave1bBG.position = CGPointMake(wave1bBG.position.x + wave1bBG.size.width * 2, wave1bBG.position.y)
+                }
+            }
+        })
+        
         // eumerate through wave2
-        self.enumerateChildNodesWithName("wave2", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("wave2", usingBlock: { (node, stop) -> Void in
             if let wave2BG = node as? SKSpriteNode {
-                wave2BG.position = CGPointMake(wave2BG.position.x + 0.3, wave2BG.position.y) // sidescroll speed
+                wave2BG.position = CGPointMake(wave2BG.position.x + 0.4, wave2BG.position.y) // sidescroll speed
                 if wave2BG.position.x >= wave2BG.size.width * 1 {
                     wave2BG.position = CGPointMake(wave2BG.position.x - wave2BG.size.width * 2, wave2BG.position.y)
                 }
@@ -459,16 +492,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
         
         // eumerate through wave3
-        self.enumerateChildNodesWithName("wave3", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("wave3", usingBlock: { (node, stop) -> Void in
             if let wave3BG = node as? SKSpriteNode {
-                wave3BG.position = CGPointMake(wave3BG.position.x - 0.5, wave3BG.position.y) // sidescroll speed
+                wave3BG.position = CGPointMake(wave3BG.position.x - 0.7, wave3BG.position.y) // sidescroll speed
                 if wave3BG.position.x <= wave3BG.size.width * -1 {
                     wave3BG.position = CGPointMake(wave3BG.position.x + wave3BG.size.width * 2, wave3BG.position.y)
                 }
             }
         })
         
-        self.enumerateChildNodesWithName("cloud1", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("cloud1", usingBlock: { (node, stop) -> Void in
             if let cloud1BG = node as? SKSpriteNode {
                 cloud1BG.position = CGPointMake(cloud1BG.position.x - 0.13, cloud1BG.position.y) // sidescroll speed
                 if cloud1BG.position.x <= cloud1BG.size.width * -1 {
@@ -477,7 +510,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         })
         
-        self.enumerateChildNodesWithName("cloud2", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("cloud2", usingBlock: { (node, stop) -> Void in
             if let cloud2BG = node as? SKSpriteNode {
                 cloud2BG.position = CGPointMake(cloud2BG.position.x - 0.10, cloud2BG.position.y) // sidescroll speed
                 if cloud2BG.position.x <= cloud2BG.size.width * -1 {
@@ -486,7 +519,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         })
         
-        self.enumerateChildNodesWithName("cloud3", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("cloud3", usingBlock: { (node, stop) -> Void in
             if let cloud3BG = node as? SKSpriteNode {
                 cloud3BG.position = CGPointMake(cloud3BG.position.x - 0.18, cloud3BG.position.y) // sidescroll speed
                 if cloud3BG.position.x <= cloud3BG.size.width * -1 {
@@ -495,7 +528,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         })
         
-        self.enumerateChildNodesWithName("cloud4", usingBlock: { (node, stop) -> Void in
+        self.ocean.enumerateChildNodesWithName("cloud4", usingBlock: { (node, stop) -> Void in
             if let cloud4BG = node as? SKSpriteNode {
                 cloud4BG.position = CGPointMake(cloud4BG.position.x - 0.08, cloud4BG.position.y) // sidescroll speed
                 if cloud4BG.position.x <= cloud4BG.size.width * -1 {
@@ -543,7 +576,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         //println("CurrentDepth = \(currentDepth)")
 //        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
-        self.ocean.position = CGPoint(x: 0, y: self.currentDepth - 2002)
+        self.ocean.position = CGPoint(x: 0, y: self.currentDepth - 2030)
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
