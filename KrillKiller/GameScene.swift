@@ -38,13 +38,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // overlay
     var overlay : SKShapeNode!
-    var clearColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+    var clearColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.0)
     var overlayColorSpectrum : [UIColor]!
+    var breatheLabel : SKLabelNode!
+    var pausedLabel : SKLabelNode!
+    var gameOverLabel : SKLabelNode!
     
     // view properties
     var oceanDepth = 2000
     var ocean : SKSpriteNode!
     var middleXPosition : Int!
+    var middleYPosition : Int!
     
     //motion properties
     var mManager = CMMotionManager()
@@ -69,10 +73,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
         var oceanWidth = CGFloat(self.view!.frame.width + 100)
-           var oceanSize = CGSize(width: 900 , height: 2352)
+        var oceanSize = CGSize(width: 900 , height: 2352)
         self.ocean = SKSpriteNode(color: UIColor.blueColor(), size: oceanSize)
         self.ocean.texture = SKTexture(imageNamed: "ocean")
-        middleXPosition = Int(scene!.size.height / 2)
+        middleXPosition = Int(self.view!.frame.width / 2)
+        middleYPosition = Int(scene!.size.height / 2)
         
         self.ocean.anchorPoint = CGPoint(x: 0, y: 0)
         self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
@@ -83,25 +88,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Sky background
         var skyBG = SKSpriteNode(imageNamed: "sky_01.png")
         skyBG.position = CGPointMake(284, 290)
-//        self.addChild(skyBG)
+        //        self.addChild(skyBG)
         
         // Clouds
-//        self.setupClouds()
-
+        //        self.setupClouds()
+        
         // Wave background
-//        self.setupWaves()
+        //        self.setupWaves()
         
         self.setupWhale()
         
         //set background to blue
-        //self.backgroundColor = UIColor.grayColor()
+        self.backgroundColor = UIColor.grayColor()
         
         //adding label to keep track of the current depth
         self.depthLabel.position = CGPoint(x: 280, y: 10)
         self.depthLabel.text = "\(self.currentDepth)"
         self.addChild(self.depthLabel)
         if let theScene = self.scene {
-//            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
+            //            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
             self.scoreLabel.position = CGPoint(x: 30, y: 18)
             self.scoreLabel.fontName = "Copperplate"
             self.scoreLabel.fontSize = 20
@@ -109,79 +114,82 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
             //self.scoreLabel.text = "\(self.currentScore)"
             self.addChild(self.scoreLabel)
-            scoreLabel.zPosition = 100
-            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: 48)
-            self.pauseButton.size = CGSize(width: 25, height: 25)
-            self.addChild(self.pauseButton)
+            //            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: 48)
+            //            self.pauseButton.size = CGSize(width: 25, height: 25)
+            //            self.addChild(self.pauseButton)
             
-        // Score bar
-        var scoreBar = SKSpriteNode(imageNamed: "uiscorebar_01.png")
-        scoreBar.position = CGPointMake(45, 24)
-        self.addChild(scoreBar)
-        scoreBar.zPosition = 100
-        
-        // Lifemeter bar
-        var lifeMeterBar = SKSpriteNode(imageNamed: "uilifemeterbar_01.png")
-        lifeMeterBar.position = CGPointMake(theScene.frame.width - 46, 24)
-        self.addChild(lifeMeterBar)
-        lifeMeterBar.zPosition = 103
+            // Score bar
+            var scoreBar = SKSpriteNode(imageNamed: "uiscorebar_01.png")
+            scoreBar.position = CGPointMake(45, 24)
+            self.addChild(scoreBar)
             
-        //add health bar
-        var oxygen : Double = 100
-        var oxygenMask : SKSpriteNode!
-        var healthCropNode = SKCropNode()
-        healthBarLocation = CGPoint(x: 110, y: self.scene!.size.height - 20)
-        var healthBarBackground = SKSpriteNode(color: UIColor.lightGrayColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
-        healthBarBackground.position = lifeMeterBar.frame.origin
-        healthBarBackground.anchorPoint = CGPoint(x: 0, y: 0)
-        healthBarBackground.position.y += 5
-        healthBarBackground.position.x += 4
-        self.addChild(healthBarBackground)
-        healthBar = SKSpriteNode(color: UIColor.greenColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
-        healthBar.position = lifeMeterBar.frame.origin
-        healthBar.position.y += 5
-        healthBar.position.x += 4
-        healthBar.anchorPoint = CGPoint(x: 0, y: 0)
-        self.addChild(healthBar)
-
-        healthBarBackground.zPosition = 100
-        healthBar.zPosition = 101
-        lifeMeterBar.zPosition = 102
+            // Lifemeter bar
+            var lifeMeterBar = SKSpriteNode(imageNamed: "uilifemeterbar_01.png")
+            lifeMeterBar.position = CGPointMake(theScene.frame.width - 46, 24)
+            self.addChild(lifeMeterBar)
             
-        barColorSpectrum = [UIColor]()
-        for i in 0..<100 {
-            var greenness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
-            var redness : CGFloat = CGFloat(1 - greenness)
-            barColorSpectrum.append(UIColor(red: redness, green: greenness, blue: 0.0/255.0, alpha: 1.0))
-        }
-
-        var overlayRect = CGRect(origin: self.view!.frame.origin, size: self.view!.frame.size)
-        overlay = SKShapeNode(rect: overlayRect)
-        overlay.fillColor = clearColor
-        //self.addChild(overlay)
-        //overlay.zPosition = 99
-        
-        overlayColorSpectrum = [UIColor]()
+            //add health bar
+            var oxygen : Double = 100
+            var oxygenMask : SKSpriteNode!
+            var healthCropNode = SKCropNode()
+            healthBarLocation = CGPoint(x: 110, y: self.scene!.size.height - 20)
+            var healthBarBackground = SKSpriteNode(color: UIColor.grayColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
+            healthBarBackground.position = lifeMeterBar.frame.origin
+            healthBarBackground.anchorPoint = CGPoint(x: 0, y: 0)
+            healthBarBackground.position.y += 5
+            healthBarBackground.position.x += 4
+            self.addChild(healthBarBackground)
+            healthBar = SKSpriteNode(color: UIColor.greenColor(), size: CGSize(width: healthBarWidth, height: healthBarHeight))
+            healthBar.position = lifeMeterBar.frame.origin
+            healthBar.position.y += 5
+            healthBar.position.x += 4
+            healthBar.anchorPoint = CGPoint(x: 0, y: 0)
+            self.addChild(healthBar)
+            
+            healthBarBackground.zPosition = 100
+            healthBar.zPosition = 101
+            lifeMeterBar.zPosition = 102
+            
+            barColorSpectrum = [UIColor]()
+            for i in 0..<100 {
+                var greenness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
+                var redness : CGFloat = CGFloat(1 - greenness)
+                barColorSpectrum.append(UIColor(red: redness, green: greenness, blue: 0.0/255.0, alpha: 1.0))
+            }
+            
+            var overlayRect = CGRect(origin: self.view!.frame.origin, size: self.view!.frame.size)
+            overlay = SKShapeNode(rect: overlayRect)
+            overlay.fillColor = clearColor
+            self.addChild(overlay)
+            overlay.zPosition = 99
+            
+            overlayColorSpectrum = [UIColor]()
             for i in 0..<50 {
-            alpha = CGFloat((i % 5) / 10)
-            println("Overlay Alpha = \(alpha)")
-            overlayColorSpectrum.append(UIColor(red: 1, green: 0, blue: 0, alpha: alpha))
+                var overlayAlpha = CGFloat(Double((i % 5)) / 10)
+                overlayColorSpectrum.append(UIColor(red: 1, green: 0, blue: 0, alpha: overlayAlpha))
+            }
+            
+            breatheLabel = setupOverlayText("Breathe!")
+            pausedLabel = setupOverlayText("Paused")
+            pausedLabel.alpha = 1
+            gameOverLabel = setupOverlayText("GAME OVER")
+            
         }
-        
-
-        }
-        else {
-            //crash it:
-            assert(2 == 3)
-        }
-
-
         
         self.setupMotionDetection()
         
         self.setupSpawnControllers()
         
         self.startBackgroundMusic()
+    }
+    
+    func setupOverlayText(text: String) -> SKLabelNode {
+        var newNode = SKLabelNode(text: text)
+        newNode.alpha = 0
+        overlay.addChild(newNode)
+        newNode.position.x = CGFloat(middleXPosition)
+        newNode.position.y = CGFloat(middleYPosition)
+        return newNode
     }
     
     func setupOceanBackgrounds() {
@@ -261,7 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setupWhale() {
-        self.whale.position = CGPoint(x: 35, y: self.middleXPosition)
+        self.whale.position = CGPoint(x: 35, y: self.middleYPosition)
         self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: whale.size.width - 30, height: whale.size.height - 30))
         self.whale.physicsBody?.affectedByGravity = false
         self.whale.name = "whale"
@@ -270,28 +278,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.whale.physicsBody?.contactTestBitMask = UInt32(krillCategory)
         self.whale.physicsBody?.collisionBitMask = 0
         self.addChild(self.whale)
-
     }
     
     
     func setupWaves() {
         
         for var i = 0; i < 2; i++ {
-
+            
             var newI = CGFloat(i)
-
+            
             var wave3BG = SKSpriteNode(imageNamed: "wave_03.png")
             wave3BG.anchorPoint = CGPointZero
             wave3BG.position = CGPointMake(newI * wave3BG.size.width, 250)
             wave3BG.name = "wave3"
             self.addChild(wave3BG)
-
+            
             var wave2BG = SKSpriteNode(imageNamed: "wave_02.png")
             wave2BG.anchorPoint = CGPointZero
             wave2BG.position = CGPointMake(-newI * wave2BG.size.width, 244)
             wave2BG.name = "wave2"
             self.addChild(wave2BG)
-
+            
             var wave1BG = SKSpriteNode(imageNamed: "wave_01.png")
             wave1BG.anchorPoint = CGPointZero
             wave1BG.position = CGPointMake(newI * wave1BG.size.width, 239)
@@ -305,19 +312,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for var i = 0; i < 1; i++ {
             
             var newI = CGFloat(i)
-
+            
             var cloud1BG = SKSpriteNode(imageNamed: "cloud_01.png")
             cloud1BG.anchorPoint = CGPointZero
             cloud1BG.position = CGPointMake(newI * cloud1BG.size.width - 100, 290) //3rd
             cloud1BG.name = "cloud1"
             self.addChild(cloud1BG)
- 
+            
             var cloud2BG = SKSpriteNode(imageNamed: "cloud_02.png")
             cloud2BG.anchorPoint = CGPointZero
             cloud2BG.position = CGPointMake(newI * cloud2BG.size.width - 60, 300) //1st
             cloud2BG.name = "cloud2"
             self.addChild(cloud2BG)
- 
+            
             var cloud3BG = SKSpriteNode(imageNamed: "cloud_03.png")
             cloud3BG.anchorPoint = CGPointZero
             cloud3BG.position = CGPointMake(newI * cloud3BG.size.width - 60, 293) //2nd
@@ -352,27 +359,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         for eachTouch in touches {
-        if CGRectContainsPoint(self.pauseButton.frame, eachTouch.locationInNode(self)) {
-            //change image, before pausing:
-            var newTexture = SKTexture(imageNamed: "play.jpg")
-            
-            self.pauseButton.texture = newTexture
             var timer1 = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("pausePressed"), userInfo: nil, repeats: false)
-            }
         }
     }
     
     func pausePressed() {
         if self.view?.paused == true {
-            //un-pause, before re-setting image:
+            //un-pause, hide "Paused" text
             self.view?.paused = false
-            var newTexture = SKTexture(imageNamed: "pause.jpg")
-            self.pauseButton.texture = newTexture
+            println("Alpha started as: \(pausedLabel.alpha)")
+            pausedLabel.alpha = 0
+            println("and now alpha is: \(pausedLabel.alpha)")
+            println("unpaused")
+            println(pausedLabel.position)
         }
         else if self.view?.paused == false {
-            //pause it. set image to play.
-            
+            //pause, display "Paused" text
             self.view?.paused = true
+            println("Alpha started as: \(pausedLabel.alpha)")
+            pausedLabel.alpha = 1
+            println("and now alpha is: \(pausedLabel.alpha)")
+            println("paused")
+            println(pausedLabel.position)
         }
     }
     func pauseAfterDelay() {
@@ -386,7 +394,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(currentTime: CFTimeInterval) {
-
+        
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
         
@@ -405,7 +413,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Artwork
         // eumerate through wave1
-        
         self.enumerateChildNodesWithName("wave1", usingBlock: { (node, stop) -> Void in
             if let wave1BG = node as? SKSpriteNode {
                 wave1BG.position = CGPointMake(wave1BG.position.x - 0.2, wave1BG.position.y) // sidescroll speed
@@ -470,7 +477,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         })
-
+        
         // ocean
         self.ocean.enumerateChildNodesWithName("ocean", usingBlock: { (node, stop) -> Void in
             if let oceanBG = node as? SKSpriteNode {
@@ -480,7 +487,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         })
-
+        
         updateHealthBar()
     }
     
@@ -490,9 +497,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var leftSpan = -0.7 - (0.7)
         var rightSpan = 45.0 - (-45.0)
         
-        //convert left range into a 0-1 range 
+        //convert left range into a 0-1 range
         var valueScale = (value - 0.7) / leftSpan
-    
+        
         return -45 + (valueScale * rightSpan)
     }
     
@@ -527,19 +534,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 else if foodName == "fishsmall_01" || foodName == "fishsmall_02" || foodName == "fishsmall_03" {
                     var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
                     contact.bodyA.node?.runAction(sfx)
-//                    eachBody.node?.removeFromParent()
+                    //                    eachBody.node?.removeFromParent()
                     self.currentScore += 1
                 }
                 else if foodName == "fishmed_01" || foodName == "fishmed_03" || foodName == "fishmed_03" {
                     var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
                     contact.bodyA.node?.runAction(sfx)
-//                    eachBody.node?.removeFromParent()
+                    //                    eachBody.node?.removeFromParent()
                     self.currentScore += 5
                 }
                 else if foodName == "fishlarge_01" || foodName == "fishlarge_04" || foodName == "fishlarge_03" {
                     var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
                     contact.bodyA.node?.runAction(sfx)
-//                    eachBody.node? .removeFromParent()
+                    //                    eachBody.node? .removeFromParent()
                     self.currentScore += 10
                 }
                 eachBody.node?.removeFromParent()
@@ -570,20 +577,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             healthBar.size.width = 0
         }
         
-//        if oxygen < 30 {
-//            displayOxygenWarning()
-//        } else {
-//            overlay.fillColor = clearColor
-//        }
-        
-//        switch oxygen {
-//            case 0:
-//                gameOver()
-//            case 0..<50:
-//                overlay.fillColor = overlayColorSpectrum[Int(oxygen)]
-//            default:
-//                overlay.fillColor = clearColor
-//        }
+        switch oxygen {
+        case 0:
+            breatheLabel.alpha = 0
+            gameOver()
+        case 0..<50:
+            breatheLabel.alpha = 1
+            overlay.fillColor = overlayColorSpectrum[Int(oxygen)]
+        default:
+            overlay.fillColor = clearColor
+            breatheLabel.alpha = 0
+        }
     }
     
     func startBackgroundMusic() {
@@ -593,19 +597,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.backgroundAudioPlayer = AVAudioPlayer(contentsOfURL: backgroundMusic, error: &error)
         
         if (error != nil) {
-//            println("error w background music player \(error?.userInfo)")
+            //            println("error w background music player \(error?.userInfo)")
         }
         self.backgroundAudioPlayer.prepareToPlay()
         self.backgroundAudioPlayer.numberOfLoops = -1 // infinite
         self.backgroundAudioPlayer.play()
     }
     
-//    func displayOxygenWarning() {
-//        
-//        
-//    }
-    
     func gameOver() {
-        
+        gameOverLabel.alpha = 1
     }
 }
