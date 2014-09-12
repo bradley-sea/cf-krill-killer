@@ -15,6 +15,7 @@
 		6DBFA51419C0F77000C58F03 /* SpawnController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBFA51319C0F77000C58F03 /* SpawnController.swift */; };
 		6DC7A52B19C20BBF00506606 /* SoundPlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC7A52A19C20BBF00506606 /* SoundPlayManager.swift */; };
 		6DC7A52D19C214F500506606 /* PowerupNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC7A52C19C214F500506606 /* PowerupNode.swift */; };
+		6DEE5D6719C36F18006BF649 /* mermaid.png in Resources */ = {isa = PBXBuildFile; fileRef = 6DEE5D6619C36F18006BF649 /* mermaid.png */; };
 		6DF7008F19C0D4C90068231E /* FoodRandomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */; };
 		A2BF1E1019BE0E7F00BAD4C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E0F19BE0E7F00BAD4C0 /* AppDelegate.swift */; };
 		A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E1119BE0E7F00BAD4C0 /* GameScene.sks */; };
@@ -67,6 +68,7 @@
 		6DBFA51319C0F77000C58F03 /* SpawnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpawnController.swift; sourceTree = "<group>"; };
 		6DC7A52A19C20BBF00506606 /* SoundPlayManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundPlayManager.swift; sourceTree = "<group>"; };
 		6DC7A52C19C214F500506606 /* PowerupNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PowerupNode.swift; sourceTree = "<group>"; };
+		6DEE5D6619C36F18006BF649 /* mermaid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mermaid.png; sourceTree = "<group>"; };
 		6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodRandomizer.swift; sourceTree = "<group>"; };
 		A2BF1E0A19BE0E7F00BAD4C0 /* KrillKiller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KrillKiller.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2BF1E0E19BE0E7F00BAD4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				6DC7A52C19C214F500506606 /* PowerupNode.swift */,
 				6DBFA51319C0F77000C58F03 /* SpawnController.swift */,
 				6DC7A52A19C20BBF00506606 /* SoundPlayManager.swift */,
+				6DEE5D6619C36F18006BF649 /* mermaid.png */,
 				6D78AD9519C369FC0046CBED /* enemySquid.png */,
 				6D78AD9319C369F00046CBED /* Shark.png */,
 				A2BF1E3119BE0E9100BAD4C0 /* krill.png */,
@@ -328,6 +331,7 @@
 				6D06B09E19BFAA580012DC6F /* play.jpg in Resources */,
 				A2BF1E3319BE0E9100BAD4C0 /* krill.png in Resources */,
 				6D78AD9419C369F00046CBED /* Shark.png in Resources */,
+				6DEE5D6719C36F18006BF649 /* mermaid.png in Resources */,
 				A2BF1E1919BE0E7F00BAD4C0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

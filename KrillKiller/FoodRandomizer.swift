@@ -92,7 +92,7 @@ class FoodRandomizer {
         }
         else {
             var mermaidType = (arc4random() % 3) + 1
-            imageName = "mermaid_0\(mermaidType)"
+            imageName = "mermaid"
         }
         name = "powerup"
         return (name, imageName)

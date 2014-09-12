@@ -612,7 +612,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 else if powerupName == "diver_01" || powerupName == "diver_02" || powerupName == "diver_03" {
                     self.oxygen = 100
                 }
-                else if powerupName == "mermaid_01" || powerupName == "mermaid_02" || powerupName == "mermaid_03" {
+                else if powerupName == "mermaid" {
                     self.magnetBegin = self.currentTime
                 }
                 eachBody.node?.removeFromParent()
