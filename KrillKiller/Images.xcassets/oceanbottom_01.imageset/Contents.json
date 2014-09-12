@@ -6,13 +6,12 @@
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "oceantop_01jp@2x.jpg"
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "oceantop_01@3x.jpg"
+      "filename" : "oceanbottom_01@3x.jpg"
     }
   ],
   "info" : {

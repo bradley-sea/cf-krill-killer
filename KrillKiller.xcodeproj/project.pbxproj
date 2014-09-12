@@ -256,11 +256,11 @@
 				TargetAttributes = {
 					A2BF1E0919BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = 246U3NZ7Z2;
+						DevelopmentTeam = C65MMLEB3C;
 					};
 					A2BF1E1F19BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = 246U3NZ7Z2;
+						DevelopmentTeam = C65MMLEB3C;
 						TestTargetID = A2BF1E0919BE0E7F00BAD4C0;
 					};
 				};
