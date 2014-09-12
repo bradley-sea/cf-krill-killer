@@ -23,6 +23,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var nextSmallBubbleTime = 0.2
     var previousTime = 0.0
     var foodYDelta = 0.0
+    var timeOfLastMeal = 0.0
+    var currentTime = 0.0
+    var magnetBegin = 0.0
     
     //categories:
     let whaleCategory = 0x1 << 0
@@ -61,13 +64,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // audio
     var backgroundAudioPlayer = AVAudioPlayer()
+    var soundPlayManager = SoundPlayManager()
     
     override func didMoveToView(view: SKView) {        
         
         self.physicsWorld.contactDelegate = self
-        
-        println (self.anchorPoint)
-        
         
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
@@ -224,8 +225,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         top2.anchorPoint = CGPointZero
         top2.position = CGPoint(x: 900, y: topOffset)
         self.ocean.addChild(top2)
-        
-        println(top2.size.width)
         
         top.name = "ocean"
         top2.name = "ocean"
@@ -396,33 +395,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if self.view?.paused == true {
             //un-pause, hide "Paused" text
             self.view?.paused = false
-            println("Alpha started as: \(pausedLabel.alpha)")
             pausedLabel.alpha = 0
-            println("and now alpha is: \(pausedLabel.alpha)")
-            println("unpaused")
-            println(pausedLabel.position)
         }
         else if self.view?.paused == false {
             //pause, display "Paused" text
             self.view?.paused = true
-            println("Alpha started as: \(pausedLabel.alpha)")
             pausedLabel.alpha = 1
-            println("and now alpha is: \(pausedLabel.alpha)")
-            println("paused")
-            println(pausedLabel.position)
         }
     }
     func pauseAfterDelay() {
         var timer1 = NSTimer.scheduledTimerWithTimeInterval(4, target: self, selector: Selector("pauseGame"), userInfo: nil, repeats: false)
-        print()
         timer1.fire()
     }
     func pauseGame() {
         self.view?.paused = true
-        print()
     }
     
     override func update(currentTime: CFTimeInterval) {
+        self.currentTime = currentTime
+        var timeSinceEating = self.currentTime - self.timeOfLastMeal
+        if timeSinceEating < 0.5 && self.timeOfLastMeal != 0 {
+            self.whale.texture = SKTexture(imageNamed: "orca_02")
+        }
+        else {
+            self.whale.texture = SKTexture(imageNamed: "orca_01")
+        }
+        var timeSinceMagnet = self.currentTime - self.magnetBegin
+        if self.magnetBegin != 0 && timeSinceMagnet <= 10.0 {
+            self.attractFood()
+        }
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
         
@@ -452,7 +453,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //see if enough time has passed to spawn food
         if self.timeSinceLastSmallBubble > self.nextSmallBubbleTime {
-            println("bubble time")
             self.spawnBubble()
             self.timeSinceLastSmallBubble = 0
         }
@@ -564,7 +564,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func updateDepth (angle : Double) {
         // angle = ~ current angle, value between -30 and 30
-        //println("Angle = \(angle)")
         if ( angle < 0 ) {
             if currentDepth <= 2000 {
                 currentDepth -= (angle / 10)
@@ -574,47 +573,107 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 currentDepth -= (angle / 10)
             }
         }
-        //println("CurrentDepth = \(currentDepth)")
 //        self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + 50 + Int(self.currentDepth))
         self.ocean.position = CGPoint(x: 0, y: self.currentDepth - 2030)
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
-        //println("contact: \(contact.contactPoint) \(contact.bodyA.node?.name) \(contact.bodyB.node?.name)")
         var bodies = [contact.bodyA,contact.bodyB]
         for eachBody in bodies {
+            
             if let foodNode = eachBody.node as? FoodNode {
                 var foodName = foodNode.imageName
                 if foodName == "krill" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_01.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
-                    foodNode.removeFromParent()
                     self.currentScore += 0
                 }
                 else if foodName == "fishsmall_01" || foodName == "fishsmall_02" || foodName == "fishsmall_03" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
-                    //                    eachBody.node?.removeFromParent()
+//                    eachBody.node?.removeFromParent()
                     self.currentScore += 1
                 }
-                else if foodName == "fishmed_01" || foodName == "fishmed_03" || foodName == "fishmed_03" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
-                    //                    eachBody.node?.removeFromParent()
+                else if foodName == "fishmed_01" || foodName == "fishmed_02" || foodName == "fishmed_03" {
+//                    eachBody.node?.removeFromParent()
                     self.currentScore += 5
                 }
-                else if foodName == "fishlarge_01" || foodName == "fishlarge_04" || foodName == "fishlarge_03" {
-                    var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
-                    contact.bodyA.node?.runAction(sfx)
-                    //                    eachBody.node? .removeFromParent()
+                else if foodName == "fishlarge_01" || foodName == "fishlarge_02" || foodName == "fishlarge_03" {
+//                    eachBody.node? .removeFromParent()
                     self.currentScore += 10
                 }
+                self.timeOfLastMeal = self.currentTime
                 eachBody.node?.removeFromParent()
+                self.soundPlayManager.playEatSound(contact.bodyA.node!)
             } else if eachBody.node?.name == "enemy" {
                 self.oxygen = self.oxygen - 10
             }
+            else if let powerupNode = eachBody.node as? PowerupNode {
+                var powerupName = powerupNode.imageName
+                if powerupName == "bubble_01" || powerupName == "bubble_02" || powerupName == "bubble_03" {
+                    self.oxygen += 20
+                }
+                else if powerupName == "diver_01" || powerupName == "diver_02" || powerupName == "diver_03" {
+                    self.oxygen = 100
+                }
+                else if powerupName == "mermaid_01" || powerupName == "mermaid_02" || powerupName == "mermaid_03" {
+                    self.magnetBegin = self.currentTime
+                }
+                eachBody.node?.removeFromParent()
+            }
+            else if eachBody.node?.name == nil {
+                eachBody.node?.removeFromParent()
+            }
+            
         }
-        print()
+    }
+    
+    func attractFood() {
+        //should only work for food within decent range:
+        self.ocean.enumerateChildNodesWithName("krill", usingBlock: { (node, stop) -> Void in
+            if let foodNode = node as? FoodNode {
+                
+                var whaleMiddle = self.whale.frame.height / 2.0
+                var magnetY : CGFloat = 0.0
+                if let theScene = self.scene?.frame.height {
+                    magnetY = 2000.0 - CGFloat(self.currentDepth) + CGFloat(theScene) / 2.0 + whaleMiddle
+                }
+                var whalePoint = CGPoint(x: CGFloat(self.whale.frame.width / 2),y: magnetY)
+                //find out food's location:
+                var foodX = foodNode.position.x
+                var foodY = foodNode.position.y
+                var deltaX = foodX - whalePoint.x
+                var deltaY = foodY - whalePoint.y
+                var distSquared = deltaX * deltaX + deltaY * deltaY
+                var magnet = SKAction.moveTo(whalePoint, duration: 0.1)
+                if sqrt(distSquared) <= 400.0 {
+                foodNode.removeActionForKey("mover")
+                var removeAction = SKAction.runBlock { () -> Void in
+                        //                    foodNode.runAction(magnet)
+                        var foodName = foodNode.imageName
+                        if foodName == "krill" {
+                            self.currentScore += 0
+                        }
+                        else if foodName == "fishsmall_01" || foodName == "fishsmall_02" || foodName == "fishsmall_03" {
+                            //                    eachBody.node?.removeFromParent()
+                            self.currentScore += 1
+                        }
+                        else if foodName == "fishmed_01" || foodName == "fishmed_02" || foodName == "fishmed_03" {
+                            //                    eachBody.node?.removeFromParent()
+                            self.currentScore += 5
+                        }
+                        else if foodName == "fishlarge_01" || foodName == "fishlarge_02" || foodName == "fishlarge_03" {
+                            //                    eachBody.node? .removeFromParent()
+                            self.currentScore += 10
+                        }
+                        self.timeOfLastMeal = self.currentTime
+                        foodNode.removeFromParent()
+                        self.soundPlayManager.playEatSound(self.whale)
+                        foodNode.attracted = true
+                    foodNode.removeFromParent()
+                }
+                            //ensures krill removed from taking up memory:
+                            var actions = SKAction.sequence([magnet,removeAction])
+                    foodNode.runAction(actions)
+                }
+            }
+        })
     }
     
     func updateHealthBar() {
@@ -659,7 +718,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.backgroundAudioPlayer = AVAudioPlayer(contentsOfURL: backgroundMusic, error: &error)
         
         if (error != nil) {
-            //            println("error w background music player \(error?.userInfo)")
         }
         self.backgroundAudioPlayer.prepareToPlay()
         self.backgroundAudioPlayer.numberOfLoops = -1 // infinite
@@ -683,11 +741,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             var highestBound = CGFloat(distanceFromGround) + (self.view!.frame.height)
             var lowestBound = CGFloat(distanceFromGround)
             
-            println("spawning bubbles between \(highestBound) and \(lowestBound)")
-            
             var yCoord = CGFloat(arc4random() % UInt32(self.view!.frame.height) + UInt32(distanceFromGround))
-            
-            println(yCoord)
             
             bubble.position = CGPoint(x: self.view!.frame.width + 30, y: yCoord)
             
