@@ -26,6 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var timeOfLastMeal = 0.0
     var currentTime = 0.0
     var magnetBegin = 0.0
+    var damageTimer = 0.0
     
     //categories:
     let whaleCategory = 0x1 << 0
@@ -290,6 +291,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.whale.physicsBody?.categoryBitMask = UInt32(whaleCategory)
         self.whale.physicsBody?.contactTestBitMask = UInt32(krillCategory)
         self.whale.physicsBody?.collisionBitMask = 0
+        whale.color = UIColor.redColor()
+        whale.colorBlendFactor = 0.0
         self.addChild(self.whale)
     }
     
@@ -548,6 +551,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
         
         updateHealthBar()
+        
+        if damageTimer > 0 {
+            damageTimer -= 1
+            whale.colorBlendFactor = 0.5
+        } else {
+            whale.colorBlendFactor = 0.0
+        }
     }
     
     //method used to take a our current motion value and translate it to degrees between -45 and 45
@@ -603,6 +613,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.soundPlayManager.playEatSound(contact.bodyA.node!)
             } else if eachBody.node?.name == "enemy" {
                 self.oxygen = self.oxygen - 10
+                self.damageTimer = 60
             }
             else if let powerupNode = eachBody.node as? PowerupNode {
                 var powerupName = powerupNode.imageName
@@ -677,7 +688,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateHealthBar() {
-        oxygen -= 0.1
+        oxygen -= 0.05
         
         if currentDepth < 1 {
             if oxygen < 95 {
@@ -702,7 +713,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 0:
             breatheLabel.alpha = 0
             gameOver()
-        case 0..<50:
+        case 0..<30:
             breatheLabel.alpha = 1
             overlay.fillColor = overlayColorSpectrum[Int(oxygen)]
         default:

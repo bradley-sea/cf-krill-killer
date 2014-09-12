@@ -268,11 +268,11 @@
 				TargetAttributes = {
 					A2BF1E0919BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = L897SQDS85;
+						DevelopmentTeam = B92CSLLW52;
 					};
 					A2BF1E1F19BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = L897SQDS85;
+						DevelopmentTeam = B92CSLLW52;
 						TestTargetID = A2BF1E0919BE0E7F00BAD4C0;
 					};
 				};
