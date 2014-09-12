@@ -13,21 +13,27 @@ class SpawnController {
     //categories:
     let whaleCategory = 0x1 << 0
     let krillCategory = 0x1 << 1
+    let enemyCategory = 0x1 << 2
     
     let spawnArea : CGRect
     var frequency : Double
+    var enemyFrequency : Double
     var ocean : SKNode
     var depthLevel : Int
     var deltaTime = 0.0
     var timeSinceLastSpawn = 0.0
+    var timeSinceLastEnemy = 0.0
     var previousTime = 0.0
     var foodYDelta = 0.0
+    
+    var squidSpawned = 0
     
     init(spawnArea : CGRect, depthLevel : Int, frequency : Double, theOcean : SKSpriteNode) {
         self.spawnArea = spawnArea
         self.depthLevel = depthLevel
         self.frequency = frequency
         self.ocean = theOcean
+        self.enemyFrequency = 3.0
     }
     func update(currentTime: CFTimeInterval) {
         
@@ -35,11 +41,16 @@ class SpawnController {
         self.deltaTime = currentTime - self.previousTime
         self.previousTime = currentTime
         self.timeSinceLastSpawn += self.deltaTime
+        self.timeSinceLastEnemy += self.deltaTime
         
         //see if enough time has passed to spawn food
         if self.timeSinceLastSpawn > self.frequency {
             self.spawnFood()
             self.timeSinceLastSpawn = 0
+        }
+        if self.timeSinceLastEnemy > self.enemyFrequency {
+            self.spawnEnemy()
+            self.timeSinceLastEnemy = 0
         }
     }
     func spawnFood() {
@@ -65,5 +76,74 @@ class SpawnController {
         
         var mover = SKAction.moveTo(CGPoint(x: krill.position.x - 800, y: krill.position.y - 100), duration: 2.0)
         krill.runAction(mover)
+    }
+    
+    func spawnEnemy() {
+    
+      var enemy = SKSpriteNode(imageNamed: "enemySquid")
+        enemy.name = "enemy"
+        
+        enemy.physicsBody = SKPhysicsBody(rectangleOfSize: enemy.size)
+        enemy.physicsBody!.affectedByGravity = false
+        enemy.physicsBody!.categoryBitMask = UInt32(enemyCategory)
+        enemy.physicsBody!.contactTestBitMask = UInt32(whaleCategory)
+        enemy.physicsBody!.collisionBitMask = 0
+        
+        var xCoord = CGFloat(arc4random() % UInt32(spawnArea.width) + UInt32(spawnArea.origin.x))
+        var yCoord = CGFloat(arc4random() % UInt32(spawnArea.height) + UInt32(spawnArea.origin.y))
+        
+        //for now get middle of spawn area
+        var midX = xCoord
+        var midY = yCoord
+        
+        enemy.position = CGPoint(x: midX, y: midY)
+        
+        self.ocean.addChild(enemy)
+        
+        var firstMove = SKAction.moveTo(CGPoint(x: enemy.position.x - 300, y: enemy.position.y - 30), duration: 0.5)
+        var firstWait = SKAction.moveTo(CGPoint(x: enemy.position.x - 300, y: enemy.position.y - 30), duration: 0.5)
+        var secondMove = SKAction.moveTo(CGPoint(x: enemy.position.x - 600, y: enemy.position.y - 30), duration: 0.5)
+        var secondWait = SKAction.moveTo(CGPoint(x: enemy.position.x - 600, y: enemy.position.y - 30), duration: 0.5)
+        var thirdMove = SKAction.moveTo(CGPoint(x: enemy.position.x - 900, y: enemy.position.y - 30), duration: 0.5)
+        
+        var sequence = SKAction.sequence([firstMove,firstWait,secondMove,secondWait,thirdMove])
+        
+        enemy.runAction(sequence)
+        
+         self.squidSpawned++
+        
+        if self.squidSpawned > 5 {
+            
+            self.spawnShark()
+            self.squidSpawned = 0
+        }
+    }
+    
+    func spawnShark() {
+        
+        var enemy = SKSpriteNode(imageNamed: "Shark")
+        enemy.name = "enemy"
+        
+        enemy.physicsBody = SKPhysicsBody(rectangleOfSize: enemy.size)
+        enemy.physicsBody!.affectedByGravity = false
+        enemy.physicsBody!.categoryBitMask = UInt32(enemyCategory)
+        enemy.physicsBody!.contactTestBitMask = UInt32(whaleCategory)
+        enemy.physicsBody!.collisionBitMask = 0
+        
+        var xCoord = CGFloat(arc4random() % UInt32(spawnArea.width) + UInt32(spawnArea.origin.x))
+        var yCoord = CGFloat(arc4random() % UInt32(spawnArea.height) + UInt32(spawnArea.origin.y))
+        
+        //for now get middle of spawn area
+        var midX = xCoord
+        var midY = yCoord
+        
+        enemy.position = CGPoint(x: midX, y: midY)
+        
+        self.ocean.addChild(enemy)
+        
+        var firstMove = SKAction.moveTo(CGPoint(x: enemy.position.x - 900, y: enemy.position.y - 30), duration: 2.0)
+        
+        enemy.runAction(firstMove)
+
     }
 }

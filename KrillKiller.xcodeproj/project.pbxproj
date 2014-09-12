@@ -12,6 +12,9 @@
 		6D06B09E19BFAA580012DC6F /* play.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6D06B09D19BFAA580012DC6F /* play.jpg */; };
 		6DBFA51419C0F77000C58F03 /* SpawnController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBFA51319C0F77000C58F03 /* SpawnController.swift */; };
 		6DF7008F19C0D4C90068231E /* FoodRandomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */; };
+		A2BD2B2119C35CEC00C3C27E /* EnemyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BD2B2019C35CEC00C3C27E /* EnemyNode.swift */; };
+		A2BD2B2319C35DD200C3C27E /* enemySquid.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BD2B2219C35DD200C3C27E /* enemySquid.png */; };
+		A2BD2B2519C3634F00C3C27E /* Shark.png in Resources */ = {isa = PBXBuildFile; fileRef = A2BD2B2419C3634F00C3C27E /* Shark.png */; };
 		A2BF1E1019BE0E7F00BAD4C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E0F19BE0E7F00BAD4C0 /* AppDelegate.swift */; };
 		A2BF1E1219BE0E7F00BAD4C0 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A2BF1E1119BE0E7F00BAD4C0 /* GameScene.sks */; };
 		A2BF1E1419BE0E7F00BAD4C0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BF1E1319BE0E7F00BAD4C0 /* GameScene.swift */; };
@@ -60,6 +63,9 @@
 		6D06B09D19BFAA580012DC6F /* play.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = play.jpg; sourceTree = "<group>"; };
 		6DBFA51319C0F77000C58F03 /* SpawnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpawnController.swift; sourceTree = "<group>"; };
 		6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodRandomizer.swift; sourceTree = "<group>"; };
+		A2BD2B2019C35CEC00C3C27E /* EnemyNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemyNode.swift; sourceTree = "<group>"; };
+		A2BD2B2219C35DD200C3C27E /* enemySquid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemySquid.png; sourceTree = "<group>"; };
+		A2BD2B2419C3634F00C3C27E /* Shark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Shark.png; sourceTree = "<group>"; };
 		A2BF1E0A19BE0E7F00BAD4C0 /* KrillKiller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KrillKiller.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2BF1E0E19BE0E7F00BAD4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2BF1E0F19BE0E7F00BAD4C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -144,6 +150,9 @@
 				F27CA10519BF6777005E5653 /* FoodNode.swift */,
 				6DF7008E19C0D4C90068231E /* FoodRandomizer.swift */,
 				6DBFA51319C0F77000C58F03 /* SpawnController.swift */,
+				A2BD2B2019C35CEC00C3C27E /* EnemyNode.swift */,
+				A2BD2B2419C3634F00C3C27E /* Shark.png */,
+				A2BD2B2219C35DD200C3C27E /* enemySquid.png */,
 				A2BF1E3119BE0E9100BAD4C0 /* krill.png */,
 				6D06B09B19BFA8BB0012DC6F /* pause.jpg */,
 				6D06B09D19BFAA580012DC6F /* play.jpg */,
@@ -256,11 +265,11 @@
 				TargetAttributes = {
 					A2BF1E0919BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = C65MMLEB3C;
+						DevelopmentTeam = 246U3NZ7Z2;
 					};
 					A2BF1E1F19BE0E7F00BAD4C0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = C65MMLEB3C;
+						DevelopmentTeam = 246U3NZ7Z2;
 						TestTargetID = A2BF1E0919BE0E7F00BAD4C0;
 					};
 				};
@@ -298,6 +307,8 @@
 				F2E545A219C1697E0095C5ED /* whaleeat_06.caf in Resources */,
 				F2E545A319C1697E0095C5ED /* whaleeat_07.caf in Resources */,
 				F2E545A419C1697E0095C5ED /* whaleeat_08.caf in Resources */,
+				A2BD2B2519C3634F00C3C27E /* Shark.png in Resources */,
+				A2BD2B2319C35DD200C3C27E /* enemySquid.png in Resources */,
 				F2E545A519C1697E0095C5ED /* whaleeat_09.caf in Resources */,
 				F2E545A619C1697E0095C5ED /* whaleeat_10.caf in Resources */,
 				F2E545A719C1697E0095C5ED /* whaleenemy_01.caf in Resources */,
@@ -339,6 +350,7 @@
 				A2BF1E1019BE0E7F00BAD4C0 /* AppDelegate.swift in Sources */,
 				6DBFA51419C0F77000C58F03 /* SpawnController.swift in Sources */,
 				6DF7008F19C0D4C90068231E /* FoodRandomizer.swift in Sources */,
+				A2BD2B2119C35CEC00C3C27E /* EnemyNode.swift in Sources */,
 				F27CA10819BF9CC5005E5653 /* WhaleNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
