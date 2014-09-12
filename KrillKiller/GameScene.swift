@@ -634,4 +634,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func gameOver() {
         gameOverLabel.alpha = 1
     }
+    
+    func spawnBubble() -> Void {
+        
+        var bubble = SKSpriteNode(imageNamed: "bubble_01")
+        bubble.size = CGSize(width: bubble.size.width / 3, height: bubble.size.height / 3)
+        
+        var distanceFromGround = 2000 - self.currentDepth
+        
+        if self.currentDepth < 2000 {
+            
+            
+            var highestBound = CGFloat(distanceFromGround) + (self.view!.frame.height)
+            var lowestBound = CGFloat(distanceFromGround)
+            
+            println("spawning bubbles between \(highestBound) and \(lowestBound)")
+            
+            var yCoord = CGFloat(arc4random() % UInt32(self.view!.frame.height) + UInt32(distanceFromGround))
+            
+            println(yCoord)
+            
+            bubble.position = CGPoint(x: self.view!.frame.width + 30, y: yCoord)
+            
+            var mover = SKAction.moveToX(-30, duration: 0.7)
+            var remove = SKAction.runBlock({ () -> Void in
+                bubble.removeFromParent()
+            })
+            self.ocean.addChild(bubble)
+            var sequence = SKAction.sequence([mover,remove])
+            bubble.runAction(sequence)
+            
+        }
+    }
+
+    
 }
