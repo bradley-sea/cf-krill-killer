@@ -19,8 +19,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pauseButton = SKSpriteNode(imageNamed: "pause.jpg")
     var currentScore = 0
     var deltaTime = 0.0
-    var timeSinceLastFood = 0.0
-    var nextFoodTime = 0.0
+    var timeSinceLastSmallBubble = 0.0
+    var nextSmallBubbleTime = 0.2
     var previousTime = 0.0
     var foodYDelta = 0.0
     
@@ -31,19 +31,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // health bar
     var oxygen = 100.0
     var healthBarLocation : CGPoint!
-//    var healthBarWidth = 61
-//    var healthBarHeight = 16
     var healthBarWidth = 60
     var healthBarHeight = 11
     var healthBar : SKSpriteNode!
     var barColorSpectrum : [UIColor]!
-    //var barColorSpectrum = [AnyObject]()
-    //var barColorSpectrum : [UIColor]!
+    
+    // overlay
+    var overlay : SKShapeNode!
+    var clearColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.0)
+    var overlayColorSpectrum : [UIColor]!
+    var breatheLabel : SKLabelNode!
+    var pausedLabel : SKLabelNode!
+    var gameOverLabel : SKLabelNode!
     
     // view properties
     var oceanDepth = 2350
     var ocean : SKSpriteNode!
     var middleXPosition : Int!
+    var middleYPosition : Int!
     
     var waves : SKSpriteNode!
     
@@ -61,6 +66,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.physicsWorld.contactDelegate = self
         
+        println (self.anchorPoint)
+        
+        
         if let theSize = self.view?.bounds.size {
             self.scene?.size = theSize
         }
@@ -72,10 +80,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Ocean background
 //        var color = UIColor(red: 28.0/255.0, green: 84.0/255.0, blue: 192.0/255.0, alpha: 0.5)
 //        var oceanWidth = CGFloat(self.view!.frame.width + 100)
-        var oceanSize = CGSize(width: 900 , height: 2352)
+         var oceanSize = CGSize(width: 900 , height: 2352)
         self.ocean = SKSpriteNode(color: UIColor.blueColor(), size: oceanSize)
-        //self.ocean.texture = SKTexture(imageNamed: "ocean")
-        middleXPosition = Int(scene!.size.height / 2)
+        self.ocean.texture = SKTexture(imageNamed: "ocean")
+        middleXPosition = Int(self.view!.frame.width / 2)
+        middleYPosition = Int(scene!.size.height / 2)
         
         self.ocean.anchorPoint = CGPoint(x: 0, y: 0)
         self.ocean.position = CGPoint(x: 0, y: -oceanDepth + middleXPosition + Int(self.currentDepth))
@@ -106,7 +115,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.depthLabel.text = "\(self.currentDepth)"
         self.addChild(self.depthLabel)
         if let theScene = self.scene {
-//            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
+            //            self.scoreLabel.position = CGPoint(x: theScene.frame.width - 80, y: theScene.frame.height - 50)
             self.scoreLabel.position = CGPoint(x: 30, y: 18)
             self.scoreLabel.fontName = "Copperplate"
             self.scoreLabel.fontSize = 20
@@ -114,9 +123,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
             //self.scoreLabel.text = "\(self.currentScore)"
             self.addChild(self.scoreLabel)
-            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: 48)
-            self.pauseButton.size = CGSize(width: 25, height: 25)
-            self.addChild(self.pauseButton)
+            //            self.pauseButton.position = CGPoint(x: theScene.frame.width - 20, y: 48)
+            //            self.pauseButton.size = CGSize(width: 25, height: 25)
+            //            self.addChild(self.pauseButton)
             
         // UI: Score bar
         var scoreBar = SKSpriteNode(imageNamed: "uiscorebar_01.png")
@@ -149,28 +158,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        healthBar.zPosition = lifeMeterBar.zPosition - 1
 //        healthBarBackground.zPosition = lifeMeterBar.zPosition - 2
             
+            healthBarBackground.zPosition = 100
+            healthBar.zPosition = 101
+            lifeMeterBar.zPosition = 102
             
-        //barColorSpectrum = [UIColor](count: 100, repeatedValue: UIColor.brownColor())
-        barColorSpectrum = [UIColor]()
-        for i in 0..<100 {
-//            var redness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
-//            var greenness : CGFloat = CGFloat(1 - redness)
-            var greenness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
-            var redness : CGFloat = CGFloat(1 - greenness)
-            barColorSpectrum.append(UIColor(red: redness, green: greenness, blue: 0.0/255.0, alpha: 1.0))
-            //barColorSpectrum.append( UIColor(red: red, green: green, blue: 0.0/255.0, alpha: 1.0) )
-            //barColorSpectrum.append( UIColor.blueColor() )
-        }
+            barColorSpectrum = [UIColor]()
+            for i in 0..<100 {
+                var greenness : CGFloat = CGFloat(Double(i * 2.5) / 255.0)
+                var redness : CGFloat = CGFloat(1 - greenness)
+                barColorSpectrum.append(UIColor(red: redness, green: greenness, blue: 0.0/255.0, alpha: 1.0))
+            }
             
-            println("spectrum count")
-            println(barColorSpectrum.count)
-        
-        println(lifeMeterBar.frame)
-        
-        }
-        else {
-            //crash it:
-            assert(2 == 3)
+            var overlayRect = CGRect(origin: self.view!.frame.origin, size: self.view!.frame.size)
+            overlay = SKShapeNode(rect: overlayRect)
+            overlay.fillColor = clearColor
+            self.addChild(overlay)
+            overlay.zPosition = 99
+            
+            overlayColorSpectrum = [UIColor]()
+            for i in 0..<50 {
+                var overlayAlpha = CGFloat(Double((i % 5)) / 10)
+                overlayColorSpectrum.append(UIColor(red: 1, green: 0, blue: 0, alpha: overlayAlpha))
+            }
+            
+            breatheLabel = setupOverlayText("Breathe!")
+            pausedLabel = setupOverlayText("Paused")
+            pausedLabel.alpha = 1
+            gameOverLabel = setupOverlayText("GAME OVER")
+            
         }
         
         self.setupMotionDetection()
@@ -180,10 +195,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.startBackgroundMusic()
     }
     
+    func setupOverlayText(text: String) -> SKLabelNode {
+        var newNode = SKLabelNode(text: text)
+        newNode.alpha = 0
+        overlay.addChild(newNode)
+        newNode.position.x = CGFloat(middleXPosition)
+        newNode.position.y = CGFloat(middleYPosition)
+        return newNode
+    }
+    
     func setupOceanBackgrounds() {
         
         //total ocean size
-        var oceanSize = CGSize(width: 900 , height: 2352)
+        var oceanSize = CGSize(width: 900.5 , height: 2352)
         
         var imageHeightInPoints : CGFloat = 784
         
@@ -191,15 +215,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var topOffset = CGFloat(oceanSize.height - imageHeightInPoints)
         var topImageOrigin = CGPoint(x: 0, y: topOffset)
         
-        var top = SKSpriteNode(imageNamed: "oceantop_01")
+        var top = SKSpriteNode(imageNamed: "oceantop_01jp")
         top.anchorPoint = CGPointZero
         top.position = topImageOrigin
         self.ocean.addChild(top)
         
-        var top2 = SKSpriteNode(imageNamed: "oceantop_01")
+        var top2 = SKSpriteNode(imageNamed: "oceantop_01jp")
         top2.anchorPoint = CGPointZero
-        top2.position = CGPoint(x: 900, y: topOffset)
+        top2.position = CGPoint(x: 900.5, y: topOffset)
         self.ocean.addChild(top2)
+        
+        println(top2.size.width)
         
         top.name = "ocean"
         top2.name = "ocean"
@@ -208,14 +234,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var middleOffset = CGFloat(oceanSize.height - (imageHeightInPoints * 2))
         var middleImageOrigin = CGPoint(x: 0, y: middleOffset)
         
-        var middle = SKSpriteNode(imageNamed: "oceanmiddle_01")
+        var middle = SKSpriteNode(imageNamed: "oceanmiddle_01jp")
         middle.anchorPoint = CGPointZero
         middle.position = middleImageOrigin
         self.ocean.addChild(middle)
         
-        var middle2 = SKSpriteNode(imageNamed: "oceanmiddle_01")
+        var middle2 = SKSpriteNode(imageNamed: "oceanmiddle_01jp")
         middle2.anchorPoint = CGPointZero
-        middle2.position = CGPoint(x: 900, y: middleOffset)
+        middle2.position = CGPoint(x: 900.5, y: middleOffset)
         self.ocean.addChild(middle2)
         
         middle.name = "ocean"
@@ -226,14 +252,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var bottomOffset = CGFloat(0)
         var bottomImageOrigin = CGPoint(x: 0, y: bottomOffset)
         
-        var bottom = SKSpriteNode(imageNamed: "oceanbottom_01")
+        var bottom = SKSpriteNode(imageNamed: "oceanbottom_01jp")
         bottom.anchorPoint = CGPointZero
         bottom.position = bottomImageOrigin
         self.ocean.addChild(bottom)
         
-        var bottom2 = SKSpriteNode(imageNamed: "oceanbottom_01")
+        var bottom2 = SKSpriteNode(imageNamed: "oceanbottom_01jp")
         bottom2.anchorPoint = CGPointZero
-        bottom2.position = CGPoint(x: 900, y: bottomOffset)
+        bottom2.position = CGPoint(x: 900.5, y: bottomOffset)
         self.ocean.addChild(bottom2)
         
         bottom.name = "ocean"
@@ -257,8 +283,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setupWhale() {
-        self.whale.position = CGPoint(x: 35, y: self.middleXPosition)
-        self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: self.whale.size)
+        self.whale.position = CGPoint(x: 35, y: self.middleYPosition)
+        self.whale.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: whale.size.width - 30, height: whale.size.height - 30))
         self.whale.physicsBody?.affectedByGravity = false
         self.whale.name = "whale"
         //        self.whale.physicsBody?.contactTestBitMask = 1
@@ -272,15 +298,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupWaves() {
         
         for var i = 0; i < 2; i++ {
-
+            
             var newI = CGFloat(i)
-
+            
             var wave3BG = SKSpriteNode(imageNamed: "wave_03.png")
             wave3BG.anchorPoint = CGPointZero
             wave3BG.position = CGPointMake(newI * wave3BG.size.width, 2180)
             wave3BG.name = "wave3"
             self.ocean.addChild(wave3BG)
-
+            
             var wave2BG = SKSpriteNode(imageNamed: "wave_02.png")
             wave2BG.anchorPoint = CGPointZero
             wave2BG.position = CGPointMake(-newI * wave2BG.size.width, 2180)
@@ -315,13 +341,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for var i = 0; i < 1; i++ {
             
             var newI = CGFloat(i)
-
+            
             var cloud1BG = SKSpriteNode(imageNamed: "cloud_01.png")
             cloud1BG.anchorPoint = CGPointZero
             cloud1BG.position = CGPointMake(newI * cloud1BG.size.width - 100, 2250) //3rd
             cloud1BG.name = "cloud1"
             self.ocean.addChild(cloud1BG)
- 
+
             var cloud2BG = SKSpriteNode(imageNamed: "cloud_02.png")
             cloud2BG.anchorPoint = CGPointZero
             cloud2BG.position = CGPointMake(newI * cloud2BG.size.width - 60, 2280) //1st
@@ -362,27 +388,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         for eachTouch in touches {
-        if CGRectContainsPoint(self.pauseButton.frame, eachTouch.locationInNode(self)) {
-            //change image, before pausing:
-            var newTexture = SKTexture(imageNamed: "play.jpg")
-            
-            self.pauseButton.texture = newTexture
             var timer1 = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("pausePressed"), userInfo: nil, repeats: false)
-            }
         }
     }
     
     func pausePressed() {
         if self.view?.paused == true {
-            //un-pause, before re-setting image:
+            //un-pause, hide "Paused" text
             self.view?.paused = false
-            var newTexture = SKTexture(imageNamed: "pause.jpg")
-            self.pauseButton.texture = newTexture
+            println("Alpha started as: \(pausedLabel.alpha)")
+            pausedLabel.alpha = 0
+            println("and now alpha is: \(pausedLabel.alpha)")
+            println("unpaused")
+            println(pausedLabel.position)
         }
         else if self.view?.paused == false {
-            //pause it. set image to play.
-            
+            //pause, display "Paused" text
             self.view?.paused = true
+            println("Alpha started as: \(pausedLabel.alpha)")
+            pausedLabel.alpha = 1
+            println("and now alpha is: \(pausedLabel.alpha)")
+            println("paused")
+            println(pausedLabel.position)
         }
     }
     func pauseAfterDelay() {
@@ -406,11 +433,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         //Calculate angle of whale to properly move ocean
+        
+        if self.currentDepth >= 0.0 {
+            
+        }
         var newValue = self.translate(self.currentYDirection)
         var newRadian : CGFloat = CGFloat(M_PI * newValue / 180.0)
         self.whale.zRotation = newRadian
         var testValue = -35.0
         self.updateDepth(newValue)
+
+        
+        
+        //grab delta time
+        self.deltaTime = currentTime - self.previousTime
+        self.previousTime = currentTime
+        self.timeSinceLastSmallBubble += self.deltaTime
+        
+        //see if enough time has passed to spawn food
+        if self.timeSinceLastSmallBubble > self.nextSmallBubbleTime {
+            println("bubble time")
+            self.spawnBubble()
+            self.timeSinceLastSmallBubble = 0
+        }
+        
+        self.depthLabel.text = "\(2000 - self.currentDepth)"
+        
         
         // Artwork
         // eumerate through wave1
@@ -488,17 +536,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         })
-
+        
         // ocean
         self.ocean.enumerateChildNodesWithName("ocean", usingBlock: { (node, stop) -> Void in
             if let oceanBG = node as? SKSpriteNode {
-                oceanBG.position = CGPointMake(oceanBG.position.x - 0.5, oceanBG.position.y) // sidescroll speed
+                oceanBG.position = CGPointMake(oceanBG.position.x - 1, oceanBG.position.y) // sidescroll speed
                 if oceanBG.position.x <= oceanBG.size.width * -1 {
                     oceanBG.position = CGPointMake(oceanBG.position.x + oceanBG.size.width * 2, oceanBG.position.y)
                 }
             }
         })
-
+        
         updateHealthBar()
     }
     
@@ -508,9 +556,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var leftSpan = -0.7 - (0.7)
         var rightSpan = 45.0 - (-45.0)
         
-        //convert left range into a 0-1 range 
+        //convert left range into a 0-1 range
         var valueScale = (value - 0.7) / leftSpan
-    
+        
         return -45 + (valueScale * rightSpan)
     }
     
@@ -546,19 +594,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 else if foodName == "fishsmall_01" || foodName == "fishsmall_02" || foodName == "fishsmall_03" {
                     var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
                     contact.bodyA.node?.runAction(sfx)
-//                    eachBody.node?.removeFromParent()
+                    //                    eachBody.node?.removeFromParent()
                     self.currentScore += 1
                 }
                 else if foodName == "fishmed_01" || foodName == "fishmed_03" || foodName == "fishmed_03" {
                     var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
                     contact.bodyA.node?.runAction(sfx)
-//                    eachBody.node?.removeFromParent()
+                    //                    eachBody.node?.removeFromParent()
                     self.currentScore += 5
                 }
                 else if foodName == "fishlarge_01" || foodName == "fishlarge_04" || foodName == "fishlarge_03" {
                     var sfx = SKAction.playSoundFileNamed("whaleeat_02.caf", waitForCompletion: false)
                     contact.bodyA.node?.runAction(sfx)
-//                    eachBody.node? .removeFromParent()
+                    //                    eachBody.node? .removeFromParent()
                     self.currentScore += 10
                 }
                 eachBody.node?.removeFromParent()
@@ -588,6 +636,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             healthBar.size.width = 0
         }
+        
+        switch oxygen {
+        case 0:
+            breatheLabel.alpha = 0
+            gameOver()
+        case 0..<50:
+            breatheLabel.alpha = 1
+            overlay.fillColor = overlayColorSpectrum[Int(oxygen)]
+        default:
+            overlay.fillColor = clearColor
+            breatheLabel.alpha = 0
+        }
     }
     
     func startBackgroundMusic() {
@@ -597,10 +657,48 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.backgroundAudioPlayer = AVAudioPlayer(contentsOfURL: backgroundMusic, error: &error)
         
         if (error != nil) {
-//            println("error w background music player \(error?.userInfo)")
+            //            println("error w background music player \(error?.userInfo)")
         }
         self.backgroundAudioPlayer.prepareToPlay()
         self.backgroundAudioPlayer.numberOfLoops = -1 // infinite
         self.backgroundAudioPlayer.play()
     }
+    
+    func gameOver() {
+        gameOverLabel.alpha = 1
+    }
+    
+    func spawnBubble() -> Void {
+        
+        var bubble = SKSpriteNode(imageNamed: "bubble_01")
+        bubble.size = CGSize(width: bubble.size.width / 3, height: bubble.size.height / 3)
+        
+        var distanceFromGround = 2000 - self.currentDepth
+        
+        if self.currentDepth < 2000 {
+            
+            
+            var highestBound = CGFloat(distanceFromGround) + (self.view!.frame.height)
+            var lowestBound = CGFloat(distanceFromGround)
+            
+            println("spawning bubbles between \(highestBound) and \(lowestBound)")
+            
+            var yCoord = CGFloat(arc4random() % UInt32(self.view!.frame.height) + UInt32(distanceFromGround))
+            
+            println(yCoord)
+            
+            bubble.position = CGPoint(x: self.view!.frame.width + 30, y: yCoord)
+            
+            var mover = SKAction.moveToX(-30, duration: 0.7)
+            var remove = SKAction.runBlock({ () -> Void in
+                bubble.removeFromParent()
+            })
+            self.ocean.addChild(bubble)
+            var sequence = SKAction.sequence([mover,remove])
+            bubble.runAction(sequence)
+            
+        }
+    }
+
+    
 }
