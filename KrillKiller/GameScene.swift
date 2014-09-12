@@ -82,7 +82,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        var oceanWidth = CGFloat(self.view!.frame.width + 100)
          var oceanSize = CGSize(width: 900 , height: 2352)
         self.ocean = SKSpriteNode(color: UIColor.blueColor(), size: oceanSize)
-        self.ocean.texture = SKTexture(imageNamed: "ocean")
+//        self.ocean.texture = SKTexture(imageNamed: "ocean")
         middleXPosition = Int(self.view!.frame.width / 2)
         middleYPosition = Int(scene!.size.height / 2)
         
@@ -215,14 +215,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var topOffset = CGFloat(oceanSize.height - imageHeightInPoints)
         var topImageOrigin = CGPoint(x: 0, y: topOffset)
         
-        var top = SKSpriteNode(imageNamed: "oceantop_01jp")
+        var top = SKSpriteNode(imageNamed: "oceantop_01.jpg")
         top.anchorPoint = CGPointZero
         top.position = topImageOrigin
         self.ocean.addChild(top)
         
-        var top2 = SKSpriteNode(imageNamed: "oceantop_01jp")
+        var top2 = SKSpriteNode(imageNamed: "oceantop_01.jpg")
         top2.anchorPoint = CGPointZero
-        top2.position = CGPoint(x: 900.5, y: topOffset)
+        top2.position = CGPoint(x: 900, y: topOffset)
         self.ocean.addChild(top2)
         
         println(top2.size.width)
@@ -234,14 +234,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var middleOffset = CGFloat(oceanSize.height - (imageHeightInPoints * 2))
         var middleImageOrigin = CGPoint(x: 0, y: middleOffset)
         
-        var middle = SKSpriteNode(imageNamed: "oceanmiddle_01jp")
+        var middle = SKSpriteNode(imageNamed: "oceanmiddle_01.jpg")
         middle.anchorPoint = CGPointZero
         middle.position = middleImageOrigin
         self.ocean.addChild(middle)
         
-        var middle2 = SKSpriteNode(imageNamed: "oceanmiddle_01jp")
+        var middle2 = SKSpriteNode(imageNamed: "oceanmiddle_01.jpg")
         middle2.anchorPoint = CGPointZero
-        middle2.position = CGPoint(x: 900.5, y: middleOffset)
+        middle2.position = CGPoint(x: 900, y: middleOffset)
         self.ocean.addChild(middle2)
         
         middle.name = "ocean"
@@ -252,14 +252,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var bottomOffset = CGFloat(0)
         var bottomImageOrigin = CGPoint(x: 0, y: bottomOffset)
         
-        var bottom = SKSpriteNode(imageNamed: "oceanbottom_01jp")
+        var bottom = SKSpriteNode(imageNamed: "oceanbottom_01.jpg")
         bottom.anchorPoint = CGPointZero
         bottom.position = bottomImageOrigin
         self.ocean.addChild(bottom)
         
-        var bottom2 = SKSpriteNode(imageNamed: "oceanbottom_01jp")
+        var bottom2 = SKSpriteNode(imageNamed: "oceanbottom_01.jpg")
         bottom2.anchorPoint = CGPointZero
-        bottom2.position = CGPoint(x: 900.5, y: bottomOffset)
+        bottom2.position = CGPoint(x: 900, y: bottomOffset)
         self.ocean.addChild(bottom2)
         
         bottom.name = "ocean"
