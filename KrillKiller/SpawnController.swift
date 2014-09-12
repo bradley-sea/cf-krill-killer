@@ -79,7 +79,13 @@ class SpawnController {
         self.ocean.addChild(krill)
         
         var mover = SKAction.moveTo(CGPoint(x: krill.position.x - 800, y: krill.position.y - 100), duration: 2.0)
-        krill.runAction(mover, withKey: "mover")
+        var remover = SKAction.runBlock { () -> Void in
+            krill.removeFromParent()
+        }
+        
+        var sequence = SKAction.sequence([mover,remover])
+        
+        krill.runAction(sequence, withKey: "mover")
     }
     
     func spawnPowerup() {
@@ -102,7 +108,11 @@ class SpawnController {
         self.ocean.addChild(powerup)
         
         var mover = SKAction.moveTo(CGPoint(x: powerup.position.x - 800, y: powerup.position.y - 100), duration: 2.0)
-        powerup.runAction(mover)
+        var remover = SKAction.runBlock { () -> Void in
+            powerup.removeFromParent()
+        }
+        var sequence = SKAction.sequence([mover,remover])
+        powerup.runAction(sequence)
     }
     
     func spawnEnemy() {
@@ -132,8 +142,11 @@ class SpawnController {
         var secondMove = SKAction.moveTo(CGPoint(x: enemy.position.x - 600, y: enemy.position.y - 30), duration: 0.5)
         var secondWait = SKAction.moveTo(CGPoint(x: enemy.position.x - 600, y: enemy.position.y - 30), duration: 0.5)
         var thirdMove = SKAction.moveTo(CGPoint(x: enemy.position.x - 900, y: enemy.position.y - 30), duration: 0.5)
+        var remover = SKAction.runBlock { () -> Void in
+            enemy.removeFromParent()
+        }
         
-        var sequence = SKAction.sequence([firstMove,firstWait,secondMove,secondWait,thirdMove])
+        var sequence = SKAction.sequence([firstMove,firstWait,secondMove,secondWait,thirdMove,remover])
         
         enemy.runAction(sequence)
         
@@ -170,7 +183,14 @@ class SpawnController {
         
         var firstMove = SKAction.moveTo(CGPoint(x: enemy.position.x - 900, y: enemy.position.y - 30), duration: 2.0)
         
-        enemy.runAction(firstMove)
+        var remover = SKAction.runBlock { () -> Void in
+            enemy.removeFromParent()
+        }
+        
+        var sequence = SKAction.sequence([firstMove,remover])
+
+        
+        enemy.runAction(sequence)
 
     }
 }
