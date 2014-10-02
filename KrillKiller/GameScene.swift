@@ -26,6 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var timeOfLastMeal = 0.0
     var currentTime = 0.0
     var magnetBegin = 0.0
+    var diverBegin = 0.0
     
     //categories:
     let whaleCategory = 0x1 << 0
@@ -194,6 +195,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.setupSpawnControllers()
         
         self.startBackgroundMusic()
+        self.depthLabel.hidden = true
     }
     
     func setupOverlayText(text: String) -> SKLabelNode {
@@ -328,6 +330,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             var newI = CGFloat(i)
             
             var wave1bBG = SKSpriteNode(imageNamed: "wave_01b.png")
+            wave1bBG.zPosition = 100
             wave1bBG.anchorPoint = CGPointZero
             wave1bBG.position = CGPointMake(newI * wave1bBG.size.width, 2170)
             wave1bBG.name = "wave0"
@@ -423,6 +426,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var timeSinceMagnet = self.currentTime - self.magnetBegin
         if self.magnetBegin != 0 && timeSinceMagnet <= 10.0 {
             self.attractFood()
+            self.whale.texture = SKTexture(imageNamed: "orcaMermaid")
+        }
+        var timeSinceDive = self.currentTime - self.diverBegin
+        if self.diverBegin != 0 && timeSinceDive <= 10.0 {
+            self.oxygen = 100
+            self.whale.texture = SKTexture(imageNamed: "orcaDiver")
+            if self.magnetBegin != 0 && timeSinceMagnet <= 10.0 {
+                self.whale.texture = SKTexture(imageNamed: "orcaDiverMermaid")
+            }
         }
         //SET SCORE
         self.scoreLabel.text = "\(self.currentScore)"
@@ -609,8 +621,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 if powerupName == "bubble_01" || powerupName == "bubble_02" || powerupName == "bubble_03" {
                     self.oxygen += 20
                 }
-                else if powerupName == "diver_01" || powerupName == "diver_02" || powerupName == "diver_03" {
+                else if powerupName == "scuba2" {
                     self.oxygen = 100
+                    self.diverBegin = self.currentTime
                 }
                 else if powerupName == "mermaid" {
                     self.magnetBegin = self.currentTime
@@ -634,18 +647,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 if let theScene = self.scene?.frame.height {
                     magnetY = 2000.0 - CGFloat(self.currentDepth) + CGFloat(theScene) / 2.0 + whaleMiddle
                 }
-                var whalePoint = CGPoint(x: CGFloat(self.whale.frame.width / 2),y: magnetY)
+                var whalePoint = CGPoint(x: CGFloat(self.whale.frame.width / 4),y: magnetY - self.whale.frame.height / 2)
                 //find out food's location:
                 var foodX = foodNode.position.x
                 var foodY = foodNode.position.y
                 var deltaX = foodX - whalePoint.x
                 var deltaY = foodY - whalePoint.y
                 var distSquared = deltaX * deltaX + deltaY * deltaY
-                var magnet = SKAction.moveTo(whalePoint, duration: 0.1)
+                var magnet = SKAction.moveTo(whalePoint, duration: 0.20)
                 if sqrt(distSquared) <= 400.0 {
                 foodNode.removeActionForKey("mover")
                 var removeAction = SKAction.runBlock { () -> Void in
                         //                    foodNode.runAction(magnet)
+                    dispatch_after(1, dispatch_get_main_queue(), {
                         var foodName = foodNode.imageName
                         if foodName == "krill" {
                             self.currentScore += 0
@@ -666,7 +680,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         foodNode.removeFromParent()
                         self.soundPlayManager.playEatSound(self.whale)
                         foodNode.attracted = true
-                    foodNode.removeFromParent()
+                        foodNode.removeFromParent()
+                    })
+                    
                 }
                             //ensures krill removed from taking up memory:
                             var actions = SKAction.sequence([magnet,removeAction])

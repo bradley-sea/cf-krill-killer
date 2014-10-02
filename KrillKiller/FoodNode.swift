@@ -52,6 +52,9 @@ class FoodNode: SKSpriteNode {
         
         super.init(coder: aDecoder)
     }
+    func removeWithDelay() {
+        var timer1 = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: Selector("removeFromParent"), userInfo: nil, repeats: false)
+    }
     
 }
 
